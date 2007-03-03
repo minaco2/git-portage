@@ -1,8 +1,12 @@
 # Copyright 1999-2007 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-text/aspell/aspell-0.50.5-r4.ebuild,v 1.17 2007/03/03 11:32:12 kevquinn Exp $
+# $Header: /var/cvsroot/gentoo-x86/app-text/aspell/Attic/aspell-0.60.5.ebuild,v 1.1 2007/03/03 11:32:12 kevquinn Exp $
 
-inherit libtool eutils flag-o-matic
+# N.B. This is before inherit of autotools, as autotools.eclass adds the
+# relevant dependencies to DEPEND.
+WANT_AUTOMAKE="1.9"
+
+inherit libtool eutils flag-o-matic autotools
 
 DESCRIPTION="A spell checker replacement for ispell"
 HOMEPAGE="http://aspell.net/"
@@ -10,31 +14,35 @@ SRC_URI="mirror://gnu/aspell/${P}.tar.gz"
 
 LICENSE="LGPL-2"
 SLOT="0"
-KEYWORDS="alpha amd64 arm hppa ia64 m68k mips ppc ppc64 s390 sh sparc x86"
-IUSE="gpm"
+KEYWORDS="~amd64 ~arm ~hppa ~ia64 ~m68k ~ppc ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
+IUSE="gpm nls"
 
-DEPEND=">=sys-libs/ncurses-5.2
-	gpm? ( sys-libs/gpm )"
+RDEPEND=">=sys-libs/ncurses-5.2
+	gpm? ( sys-libs/gpm )
+	nls? ( virtual/libintl )"
+
+DEPEND="${RDEPEND}
+	nls? ( sys-devel/gettext )"
 
 src_unpack() {
 	unpack ${A}
 	cd "${S}"
-	epatch "${FILESDIR}"/${PN}-0.50.5-charcount.patch
-	epatch "${FILESDIR}"/${PN}-quotechar-fix.patch
+	epatch "${FILESDIR}"/aspell-0.60.3-templateinstantiations.patch
+	epatch "${FILESDIR}/${P}-nls.patch"
+
+	eautomake
+	elibtoolize --reverse-deps
 }
 
 src_compile() {
-	if [ "${ARCH}" == "ppc" ] || [ "${ARCH}" == "ppc-macos" ]; then
-		append-flags -O2 -fsigned-char
-	fi
-	if [ "${ARCH}" == "alpha" ]; then
-		replace-flags -Os -O2
-	fi
 	use gpm && append-ldflags -lgpm
 	filter-flags -fno-rtti
-	elibtoolize --reverse-deps
+	filter-flags -fvisibility=hidden #77109
+	filter-flags -maltivec -mabi=altivec
+	use ppc && append-flags -mno-altivec
 
 	econf \
+		$(use_enable nls) \
 		--disable-static \
 		--sysconfdir=/etc/aspell \
 		--enable-docdir=/usr/share/doc/${PF} || die
@@ -45,9 +53,9 @@ src_compile() {
 src_install() {
 	dodoc README* TODO
 
-	make DESTDIR=${D} install || die
-	mv ${D}/usr/share/doc/${PF}/man-html ${D}/usr/share/doc/${PF}/html
-	mv ${D}/usr/share/doc/${PF}/man-text ${D}/usr/share/doc/${PF}/text
+	make DESTDIR="${D}" install || die
+	mv "${D}"/usr/share/doc/${PF}/man-html "${D}"/usr/share/doc/${PF}/html
+	mv "${D}"/usr/share/doc/${PF}/man-text "${D}"/usr/share/doc/${PF}/text
 
 	# install ispell/aspell compatibility scripts
 	exeinto /usr/bin
@@ -58,7 +66,6 @@ src_install() {
 	make clean || die
 	docinto examples
 	dodoc ${S}/examples/*
-
 }
 
 pkg_postinst() {
