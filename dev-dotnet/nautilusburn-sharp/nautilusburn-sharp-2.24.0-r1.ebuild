@@ -1,11 +1,10 @@
 # Copyright 1999-2008 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-dotnet/gnome-panel-sharp/Attic/gnome-panel-sharp-2.24.0.ebuild,v 1.1 2008/11/26 00:56:37 loki_val Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-dotnet/nautilusburn-sharp/Attic/nautilusburn-sharp-2.24.0-r1.ebuild,v 1.1 2008/11/28 00:24:39 loki_val Exp $
 
 EAPI=2
 
 GTK_SHARP_REQUIRED_VERSION="2.12"
-GTK_SHARP_MODULE_DIR="gnomepanel"
 
 inherit gtk-sharp-module
 
@@ -14,5 +13,5 @@ KEYWORDS="~x86 ~amd64"
 IUSE=""
 
 RDEPEND="=dev-dotnet/gnome-sharp-${PV}*
-	x11-libs/libwnck"
-DEPEND="${RDEPEND} dev-util/pkgconfig"
+	>=gnome-extra/nautilus-cd-burner-2.24"
+DEPEND="${RDEPEND}"
