@@ -1,8 +1,8 @@
 # Copyright 1999-2008 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-php/smarty/Attic/smarty-2.6.20.ebuild,v 1.1 2008/09/04 16:51:27 dertobi123 Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-php/smarty/Attic/smarty-2.6.20-r1.ebuild,v 1.1 2008/11/28 15:55:14 dertobi123 Exp $
 
-inherit php-lib-r1
+inherit php-lib-r1 eutils
 
 KEYWORDS="~alpha ~amd64 ~hppa ~ppc ~ppc64 ~sparc ~x86"
 
@@ -22,6 +22,13 @@ PDEPEND="doc? ( dev-php/smarty-docs )"
 S="${WORKDIR}/${MY_P}"
 
 need_php_by_category
+
+src_unpack() {
+	unpack ${A}
+	cd "${S}"
+
+	epatch "${FILESDIR}/${P}-CVE-2008-4810.patch"
+}
 
 src_install() {
 	dodoc-php BUGS ChangeLog FAQ NEWS QUICK_START README RELEASE_NOTES TODO
