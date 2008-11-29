@@ -1,10 +1,10 @@
 # Copyright 1999-2008 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-libs/libgsasl/Attic/libgsasl-0.2.26.ebuild,v 1.1 2008/06/15 13:04:17 dertobi123 Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-libs/libgsasl/Attic/libgsasl-0.2.29.ebuild,v 1.1 2008/11/29 20:42:41 dertobi123 Exp $
 
 DESCRIPTION="The GNU SASL library"
 HOMEPAGE="http://www.gnu.org/software/gsasl/"
-SRC_URI="http://josefsson.org/gsasl/releases/${P}.tar.gz"
+SRC_URI="ftp://alpha.gnu.org/pub/gnu/gsasl/${P}.tar.gz"
 LICENSE="LGPL-3"
 SLOT="0"
 # TODO: check http://www.gnu.org/software/gsasl/#dependencies for more
@@ -22,7 +22,7 @@ RDEPEND="${DEPEND}
 src_compile() {
 	econf \
 		$(use_enable kerberos gssapi) \
-		$(use_enable kerberos kerberosv5) \
+		$(use_enable kerberos kerberos_v5) \
 		$(use_with idn stringprep) \
 		$(use_enable nls) \
 	|| die "econf failed"
@@ -31,5 +31,5 @@ src_compile() {
 
 src_install() {
 	emake DESTDIR="${D}" install || die "installation failed"
-	dodoc AUTHORS ChangeLog NEWS README README-alpha THANKS
+	dodoc AUTHORS ChangeLog NEWS README THANKS
 }
