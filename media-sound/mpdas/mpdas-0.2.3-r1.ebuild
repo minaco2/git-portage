@@ -1,6 +1,6 @@
 # Copyright 1999-2008 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-sound/mpdas/Attic/mpdas-0.2.3.ebuild,v 1.1 2008/11/30 07:26:46 ssuominen Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-sound/mpdas/Attic/mpdas-0.2.3-r1.ebuild,v 1.1 2008/11/30 11:40:56 ssuominen Exp $
 
 inherit toolchain-funcs
 
@@ -20,7 +20,7 @@ DEPEND="${RDEPEND}
 
 src_compile() {
 	tc-export CXX
-	emake PREFIX="/usr" || die "emake failed."
+	emake CONFIG="/etc" || die "emake failed."
 }
 
 src_install() {
