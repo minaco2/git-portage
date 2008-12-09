@@ -1,8 +1,8 @@
 # Copyright 1999-2008 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-sound/banshee/Attic/banshee-1.4.1-r1.ebuild,v 1.1 2008/12/05 23:26:40 loki_val Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-sound/banshee/Attic/banshee-1.4.1-r2.ebuild,v 1.1 2008/12/09 21:24:34 loki_val Exp $
 
-EAPI=1
+EAPI=2
 
 inherit base gnome2 mono autotools
 
@@ -34,7 +34,10 @@ RDEPEND=">=dev-lang/mono-2
 	media-libs/musicbrainz:1
 	>=dev-dotnet/dbus-glib-sharp-0.3
 	>=dev-dotnet/dbus-sharp-0.5
-	>=dev-dotnet/mono-addins-0.3.1
+	|| (
+		~dev-dotnet/mono-addins-0.3.1
+		>=dev-dotnet/mono-addins-0.4[gtk]
+	)
 	>=dev-dotnet/taglib-sharp-2.0.3
 	>=dev-db/sqlite-3.4
 	aac? (
@@ -77,14 +80,6 @@ DOCS="AUTHORS ChangeLog HACKING NEWS README"
 
 S=${WORKDIR}/${PN}-1-${PV}
 
-src_unpack() {
-	gnome2_src_unpack
-
-	#Upstream bug 563283
-	#Author is thansen on freenode.
-	epatch "${FILESDIR}/${P}-metadata-writefail.patch"
-}
-
 pkg_setup() {
 	G2CONF="${G2CONF}
 		$(use_enable doc docs)
@@ -98,6 +93,23 @@ pkg_setup() {
 		--enable-schemas-install
 		--with-gconf-schema-file-dir=/etc/gconf/schemas"
 
+}
+
+
+src_unpack() {
+	gnome2_src_unpack
+
+	#Upstream bug 563283
+	#Author is thansen on freenode.
+	epatch "${FILESDIR}/${P}-metadata-writefail.patch"
+}
+
+src_configure() {
+	gnome2_src_configure
+}
+
+src_compile() {
+	default
 }
 
 pkg_postinst() {
