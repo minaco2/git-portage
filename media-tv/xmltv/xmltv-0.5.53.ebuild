@@ -1,13 +1,13 @@
 # Copyright 1999-2008 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-tv/xmltv/Attic/xmltv-0.5.48.ebuild,v 1.2 2008/11/18 16:17:58 tove Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-tv/xmltv/xmltv-0.5.53.ebuild,v 1.1 2008/12/17 12:32:23 mattepiu Exp $
 
 inherit eutils perl-module
 
 DESCRIPTION="Set of utilities to manage TV listings stored in the XMLTV format."
 HOMEPAGE="http://membled.com/work/apps/xmltv/"
 SRC_URI="mirror://sourceforge/xmltv//${P}.tar.bz2"
-IUSE="ar be br brnet ch dtvla uk_rt uk_bleb is it na_dd na_icons fi es es_laguiatv ee il re nc nl nl_wolf huro dk jp se_swedb hr no_gf fr no pt za tv_combiner tv_pick_cgi tv_check"
+IUSE="ar be brnet ch dtvla uk_rt uk_bleb is it na_dd na_icons fi es es_laguiatv es_miguiatv ee re huro dk jp se_swedb hr no_gf fr pt za eu_epg tv_combiner tv_pick_cgi tv_check na_dtv"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~ppc ~sparc ~x86"
@@ -36,11 +36,12 @@ RDEPEND=">=dev-perl/libwww-perl-5.65
 	virtual/perl-Storable
 	>=dev-perl/Lingua-Preferred-0.2.4
 	>=dev-perl/Term-ProgressBar-2.03
-	virtual/perl-Compress-Zlib
+	perl-core/Compress-Zlib
 	dev-perl/Unicode-String
 	dev-perl/TermReadKey
 	dev-perl/File-Slurp
-	>=dev-lang/perl-5.6.1"
+	>=dev-lang/perl-5.6.1
+	dev-perl/XML-LibXML"
 
 DEPEND="${RDEPEND}
 	brnet? ( dev-perl/IO-stringy >=dev-perl/WWW-Mechanize-1.02 )
@@ -51,13 +52,13 @@ DEPEND="${RDEPEND}
 	fr? ( >=dev-perl/HTML-Parser-3.34 dev-perl/HTML-Tree )
 	huro? ( dev-perl/HTML-Tree )
 	it? ( dev-perl/XML-Simple )
+	is? ( dev-perl/XML-LibXSLT )
 	jp? ( dev-perl/HTML-Tree dev-perl/Text-Kakasi )
 	na_dd? ( dev-perl/SOAP-Lite dev-perl/TermReadKey )
-	nl? ( dev-perl/HTML-Tree )
-	nl_wolf? ( dev-perl/HTML-Tree )
+	#nl_wolf? ( dev-perl/HTML-Tree )
 	no_gf? ( dev-perl/HTTP-Cache-Transparent dev-perl/IO-stringy dev-perl/XML-LibXML )
-	no? ( >=dev-perl/HTML-Parser-3.34 dev-perl/HTML-TableExtract dev-perl/HTML-LinkExtractor )
 	pt? ( dev-perl/HTML-Tree dev-perl/Unicode-UTF8simple )
+	eu_epg? ( dev-perl/Archive-Zip )
 	se_swedb? ( dev-perl/HTTP-Cache-Transparent dev-perl/IO-stringy dev-perl/XML-LibXML )
 	hr? ( dev-perl/HTTP-Cache-Transparent dev-perl/IO-stringy dev-perl/XML-LibXML )
 	uk_bleb? ( dev-perl/Archive-Zip dev-perl/IO-stringy )
@@ -66,6 +67,7 @@ DEPEND="${RDEPEND}
 	tv_combiner? ( dev-perl/XML-LibXML )
 	tv_check? ( dev-perl/perl-tk dev-perl/Tk-TableMatrix )
 	tv_pick_cgi? ( virtual/perl-CGI dev-perl/Lingua-EN-Numbers-Ordinate )
+	na_dtv? ( >=dev-perl/WWW-Mechanize-1.02 dev-perl/TimeDate dev-perl/IO-stringy dev-perl/XML-LibXML )
 	"
 
 make_config() {
@@ -77,7 +79,7 @@ make_config() {
 	# Enable Agentina
 	use ar && echo "yes" || echo "no"
 	# Enable Brazil
-	use br && echo "yes" || echo "no"
+	#use br && echo "yes" || echo "no"
 	# Enable Brazil Cable
 	use brnet && echo "yes" || echo "no"
 	# Enable Switzerland Search
@@ -104,14 +106,16 @@ make_config() {
 	use es  && echo "yes" || echo "no"
 	# Enable Spain Digital
 	# use es_digital && echo "yes" || echo "no"
-	# Enable Israel
-	use il && echo "yes" || echo "no"
-	# Enable Spain Alternative
+	# Israel Temporary Disabled
+	# use il && echo "yes" || echo "no"
+	#echo "no"
+	# Enable Spain Alternatives
 	use es_laguiatv && echo "yes" || echo "no"
+	use es_miguiatv && echo "yes" || echo "no"
 	# Enable Netherlands
-	use nl  && echo "yes" || echo "no"
+	#use nl  && echo "yes" || echo "no"
 	# Enable Alternate Netherlands
-	use nl_wolf  && echo "yes" || echo "no"
+	#use nl_wolf  && echo "yes" || echo "no"
 	# Enable Hungary and Romania
 	use huro  && echo "yes" || echo "no"
 	# Enable Denmark
@@ -127,11 +131,13 @@ make_config() {
 	# Enable France
 	use fr  && echo "yes" || echo "no"
 	# Enable Norway
-	use no  && echo "yes" || echo "no"
+	#use no  && echo "yes" || echo "no"
 	# Enable Portugal
 	use pt  && echo "yes" || echo "no"
 	# Enable South Africa
 	use za  && echo "yes" || echo "no"
+	# Enable Europe epg
+	use eu_epg && echo "yes" || echo "no"
 	# Enable combiner
 	use tv_combiner && echo "yes" || echo "no"
 	# Enable GUI checking.
@@ -143,14 +149,15 @@ make_config() {
 	# Enable Reunion Island
 	use re && echo "yes" || echo "no"
 	# Enable Caledonie Island
-	use nc && echo "yes" || echo "no"
+	#use nc && echo "yes" || echo "no"
+	# Enable North America DirecTV
+	use na_dtv && echo "yes" || echo "no"
 }
 
 src_unpack() {
-	unpack "${A}"
+	unpack ${A}
 
 	cd "${S}"
-	#epatch ${FILESDIR}/xmltv-na_dd-xmltwig.patch
 }
 
 src_compile() {
