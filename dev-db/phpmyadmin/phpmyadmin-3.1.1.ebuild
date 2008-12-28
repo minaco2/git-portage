@@ -1,6 +1,6 @@
 # Copyright 1999-2008 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-db/phpmyadmin/Attic/phpmyadmin-3.0.1.1.ebuild,v 1.2 2008/12/07 07:42:35 wrobel Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-db/phpmyadmin/Attic/phpmyadmin-3.1.1.ebuild,v 1.1 2008/12/28 20:53:39 wrobel Exp $
 
 inherit eutils webapp depend.php
 
@@ -25,13 +25,13 @@ S="${WORKDIR}"/${MY_P}
 pkg_setup() {
 	webapp_pkg_setup
 
-	if ! PHPCHECKNODIE="yes" require_php_with_use crypt ctype pcre session unicode \
+	if ! PHPCHECKNODIE="yes" require_php_with_use crypt ctype pcre session spl unicode \
 		|| ! PHPCHECKNODIE="yes" require_php_with_any_use mysql mysqli ; then
 		eerror
 		eerror "${PHP_PKG} needs to be re-installed with all of the following"
 		eerror "USE flags enabled:"
 		eerror
-		eerror "ctype pcre session unicode"
+		eerror "crypt ctype pcre session spl unicode"
 		eerror
 		eerror "as well as any of the following USE flags enabled:"
 		eerror
