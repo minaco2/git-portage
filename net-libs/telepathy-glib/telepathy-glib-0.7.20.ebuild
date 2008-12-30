@@ -1,18 +1,16 @@
 # Copyright 1999-2008 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-libs/telepathy-glib/Attic/telepathy-glib-0.7.14.ebuild,v 1.1 2008/08/21 10:33:29 coldwind Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-libs/telepathy-glib/Attic/telepathy-glib-0.7.20.ebuild,v 1.1 2008/12/30 12:52:54 coldwind Exp $
 
-DESCRIPTION="GLib binding for the Telepathy D-Bus protocol."
+DESCRIPTION="GLib bindings for the Telepathy D-Bus protocol."
 HOMEPAGE="http://telepathy.freedesktop.org"
 SRC_URI="http://telepathy.freedesktop.org/releases/${PN}/${P}.tar.gz"
 
 LICENSE="LGPL-2.1"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64 ~ppc64 ~sparc ~x86"
 IUSE="debug doc"
 
-# Requires glib 2.16 despite what says configure.ac
-# http://bugs.freedesktop.org/show_bug.cgi?id=17213
 RDEPEND=">=dev-libs/glib-2.16
 	>=dev-libs/dbus-glib-0.73
 	>=dev-lang/python-2.3"
@@ -20,7 +18,7 @@ RDEPEND=">=dev-libs/glib-2.16
 DEPEND="${RDEPEND}
 	dev-libs/libxslt
 	>=dev-util/pkgconfig-0.21
-	doc? ( >=dev-util/gtk-doc-1.5 )"
+	doc? ( >=dev-util/gtk-doc-1.10 )"
 
 src_compile() {
 	econf \
