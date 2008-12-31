@@ -1,6 +1,6 @@
 # Copyright 1999-2008 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-emulation/open-vm-tools/Attic/open-vm-tools-0.0.20080123.74039.ebuild,v 1.2 2008/07/06 19:41:28 ikelos Exp $
+# $Header: /var/cvsroot/gentoo-x86/app-emulation/open-vm-tools/Attic/open-vm-tools-0.0.20081223.137496.ebuild,v 1.1 2008/12/31 00:39:39 ikelos Exp $
 
 inherit pam eutils linux-mod versionator
 
@@ -15,10 +15,10 @@ DESCRIPTION="Opensourced tools for VMware guests"
 HOMEPAGE="http://open-vm-tools.sourceforge.net/"
 SRC_URI="mirror://sourceforge/${PN}/${MY_P}.tar.gz"
 
-LICENSE="GPL-2"
+LICENSE="LGPL-2"
 SLOT="0"
 KEYWORDS="~x86 ~amd64"
-IUSE="X xinerama"
+IUSE="X xinerama icu unity"
 DEPEND="
 		virtual/linux-sources
 		sys-apps/ethtool
@@ -26,26 +26,40 @@ DEPEND="
 			x11-libs/libX11
 			x11-libs/gtk+
 			)
+		unity? (
+			x11-libs/libXScrnSaver
+			dev-libs/uriparser
+		)
 		xinerama? (
 			x11-libs/libXinerama
 			)
 		!app-emulation/vmware-workstation-tools
 		!app-emulation/vmware-server-tools
 		!app-emulation/vmware-esx-tools
+		sys-process/procps
+		dev-libs/libdnet
+		icu? ( dev-libs/icu )
 		"
 
 RDEPEND="${DEPEND/virtual\/linux\-sources/}
-		X? (
+		 virtual/pam
+		 X? (
 			x11-base/xorg-server
 			x11-drivers/xf86-video-vmware
 			x11-drivers/xf86-input-vmmouse
-		)
+		 )
+		 unity? (
+			x11-libs/libXScrnSaver
+			dev-libs/uriparser
+		 )
 "
 
 VMWARE_MOD_DIR="modules/linux"
 VMWARE_MODULE_LIST="vmblock vmhgfs vmsync vmmemctl vmxnet"
 
 pkg_setup() {
+	use unity && ! use xinerama && \
+	  die 'The Unity USE flag requires USE="xinerama" as well'
 
 	linux-mod_pkg_setup
 	MODULE_NAMES=""
@@ -62,16 +76,24 @@ pkg_setup() {
 		MODULE_NAMES="${MODULE_NAMES} ${mod}(${MODTARGET}:${S}/${VMWARE_MOD_DIR}/${mod})"
 	done
 
-	ewarn "If you're compiling for a hardened target, please use the hardened"
-	ewarn "toolchain (see bug #200376, comment 18)."
+	ewarn "If you're compiling with a hardened toolchain, please use the"
+	ewarn "hardenednopie gcc profile (see bug #200376, comment 18)."
 
 	enewgroup vmware
+}
 
+src_unpack() {
+	unpack ${A}
+	cd "${S}"
+	epatch "${FILESDIR}/default-scripts.patch"
 }
 
 src_compile() {
 	econf \
+	--without-kernel-modules \
+	$(use_with icu) \
 	$(use_with X x) \
+	$(use_enable unity) \
 	$(use_enable xinerama multimon) \
 	|| die "Error: econf failed!"
 
@@ -86,44 +108,16 @@ src_install() {
 
 	pamd_mimic_system vmware-guestd auth account
 
-	# Install the various tools
-	cd "${S}"
-	VMWARE_BIN_LIST="hgfsclient xferlogs"
-	VMWARE_SBIN_LIST="guestd checkvm"
-	if use X; then
-		# Fix up the vmware-user tool's name
-		mv vmware-user/vmware-user vmware-user/user
-		mv vmware-user user
-		VMWARE_BIN_LIST="${VMWARE_BIN_LIST} user toolbox"
-	fi
-	for i in ${VMWARE_BIN_LIST}; do
-		newbin ${i}/${i} vmware-${i} || die "Failed installing ${i}"
-	done
-	for i in ${VMWARE_SBIN_LIST}; do
-		newsbin ${i}/${i} vmware-${i} || die "Failed installing ${i}"
-	done
+	emake install DESTDIR="${D}" || die "Failed to install"
 
-	dolib libguestlib/.libs/libguestlib.{so.0.0.0,a}
-
-	# Deal with the hgfsmounter
-	into /
-	newsbin hgfsmounter/hgfsmounter mount.vmhgfs
-	fperms u+s /sbin/mount.vmhgfs
-	### FROM THIS POINT ON, into IS SET TO ${ROOT}/ not ${ROOT}/usr !!!
-
-	# Install the /etc/ files
-	exeinto /etc/vmware-tools
-	doexe scripts/linux/*
-	insinto /etc/vmware-tools
-	doins "${FILESDIR}/tools.conf"
-	# Only install this, when X is being used. Else it's useless waste of
-	# ressources when checking continuously for processes that will never appear
-	use X && doins "${FILESDIR}/xautostart.conf"
 	newinitd "${FILESDIR}/open-vm.initd" vmware-tools
 	newconfd "${FILESDIR}/open-vm.confd" vmware-tools
 
 	if use X;
 	then
+		exeinto /etc/X11/xinit/xinitrc.d
+		doexe "${FILESDIR}/10-vmware-tools"
+
 		elog "To be able to use the drag'n'drop feature of VMware for file"
 		elog "exchange, you need to do this:"
 		elog "	Add 'vmware-tools' to your default runlevel"
