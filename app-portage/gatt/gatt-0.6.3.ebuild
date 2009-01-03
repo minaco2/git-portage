@@ -1,6 +1,6 @@
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-portage/gatt/Attic/gatt-0.6.1-r1.ebuild,v 1.1 2008/08/10 19:45:41 gentoofan23 Exp $
+# $Header: /var/cvsroot/gentoo-x86/app-portage/gatt/Attic/gatt-0.6.3.ebuild,v 1.1 2009/01/03 12:58:13 gentoofan23 Exp $
 
 inherit eutils
 
@@ -35,26 +35,16 @@ pkg_setup() {
 	fi
 }
 
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
-
-	epatch "${FILESDIR}"/${P}-nonfataltests.patch
-	epatch "${FILESDIR}"/${P}-tests.patch
-}
-
 src_compile() {
-	econf $(use_enable libpaludis) || die "Configure failed"
-	emake || die "Make failed"
-	if use doc; then
-		doxygen || die "doxygen failed"
-	fi
+	econf $(use_enable libpaludis) || die
+	emake || die
+	use doc && doxygen
 }
 src_install() {
-	emake DESTDIR="${D}" install || die "Make install failed"
-	dodoc README NEWS AUTHORS ChangeLog || die "Extra Docs installation failed"
+	emake DESTDIR="${D}" install || die
+	dodoc README NEWS AUTHORS ChangeLog
 
 	if use doc; then
-		dohtml doc/html/* || die "Dohtml failed"
+		dohtml doc/html/*
 	fi
 }
