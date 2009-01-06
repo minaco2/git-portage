@@ -1,6 +1,6 @@
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-plugins/vdr-fritzbox/Attic/vdr-fritzbox-0.0.13.ebuild,v 1.1 2008/03/30 12:58:16 zzam Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-plugins/vdr-fritzbox/Attic/vdr-fritzbox-1.1.4.ebuild,v 1.1 2009/01/06 00:23:02 hd_brummy Exp $
 
 inherit vdr-plugin
 
