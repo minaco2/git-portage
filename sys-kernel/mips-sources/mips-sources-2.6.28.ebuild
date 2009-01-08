@@ -1,10 +1,10 @@
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-kernel/mips-sources/Attic/mips-sources-2.6.27.9.ebuild,v 1.1 2008/12/17 05:28:27 kumba Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-kernel/mips-sources/Attic/mips-sources-2.6.28.ebuild,v 1.1 2009/01/08 05:35:55 kumba Exp $
 
 # INCLUDED:
 # 1) linux sources from kernel.org
-# 2) linux-mips.org GIT snapshot diff from 12 Dec 2008
+# 2) linux-mips.org GIT snapshot diff from 17 Dec 2008
 # 3) Generic Fixes
 # 4) Patch for the IOC3 Metadriver (IP27, IP30)
 # 5) Patch for IP30 Support
@@ -15,8 +15,8 @@
 
 # Version Data
 OKV=${PV/_/-}
-GITDATE="20081208"			# Date of diff between kernel.org and lmo GIT
-GENPATCHVER="1.33"			# Tarball version for generic patches
+GITDATE="20081230"			# Date of diff between kernel.org and lmo GIT
+GENPATCHVER="1.34"			# Tarball version for generic patches
 EXTRAVERSION="-mipsgit-${GITDATE}"
 KV="${OKV}${EXTRAVERSION}"
 F_KV="${OKV}"				# Fetch KV, used to know what mipsgit diff to grab.
@@ -41,7 +41,7 @@ DEPEND=">=sys-devel/gcc-4.1.1"
 
 # Version Control Variables
 USE_RC="no"				# If set to "yes", then attempt to use an RC kernel
-USE_PNT="yes"				# If set to "yes", then attempt to use a point-release (2.6.x.y)
+USE_PNT="no"				# If set to "yes", then attempt to use a point-release (2.6.x.y)
 
 # Machine Support Control Variables
 DO_IP22="yes"				# If "yes", enable IP22 support		(SGI Indy, Indigo2 R4x00)
@@ -330,18 +330,18 @@ do_generic_patches() {
 	ebegin ">>> Generic Patches"
 
 		# IP22 Patches
-		epatch ${MIPS_PATCHES}/misc-2.6.16-ip22-vino-64bit-ioctl-fixes.patch
+		epatch ${MIPS_PATCHES}/misc-2.6.28-ip22-vino-64bit-ioctl-fixes.patch
 
 		# IP32 Patches
 		epatch ${MIPS_PATCHES}/misc-2.6.11-ip32-mace-is-always-eth0.patch
 
 		# Generic
-		epatch ${MIPS_PATCHES}/misc-2.6.27-ths-mips-tweaks.patch
+		epatch ${MIPS_PATCHES}/misc-2.6.28-ths-mips-tweaks.patch
 		epatch ${MIPS_PATCHES}/misc-2.6.23-seccomp-no-default.patch
 		epatch ${MIPS_PATCHES}/misc-2.6.11-add-byteorder-to-proc.patch
 		epatch ${MIPS_PATCHES}/misc-2.6.24-ip32-rm7k-l3-support.patch
-		epatch ${MIPS_PATCHES}/misc-2.6.27-enable-old-rtc-drivers.patch
-		epatch ${MIPS_PATCHES}/misc-2.6.27-squashfs-3.4.patch
+		epatch ${MIPS_PATCHES}/misc-2.6.28-enable-old-rtc-drivers.patch
+		epatch ${MIPS_PATCHES}/misc-2.6.28-squashfs-3.4.patch
 	eend
 }
 
@@ -371,7 +371,7 @@ do_sekrit_patches() {
 do_ip27_support() {
 	echo -e ""
 	einfo ">>> Patching the kernel for SGI Origin 200/2000 (IP27) support ..."
-	epatch ${MIPS_PATCHES}/misc-2.6.27-ioc3-metadriver-r27.patch
+	epatch ${MIPS_PATCHES}/misc-2.6.28-ioc3-metadriver-r27.patch
 	epatch ${MIPS_PATCHES}/misc-2.6.22-ioc3-revert_commit_691cd0c.patch
 }
 
@@ -386,8 +386,8 @@ do_ip28_support() {
 do_ip30_support() {
 	echo -e ""
 	einfo ">>> Patching the kernel for SGI Octane (IP30) support ..."
-	epatch ${MIPS_PATCHES}/misc-2.6.27-ioc3-metadriver-r27.patch
-	epatch ${MIPS_PATCHES}/misc-2.6.27-ip30-octane-support-r28.patch
+	epatch ${MIPS_PATCHES}/misc-2.6.28-ioc3-metadriver-r27.patch
+	epatch ${MIPS_PATCHES}/misc-2.6.28-ip30-octane-support-r28.patch
 	epatch ${MIPS_PATCHES}/misc-2.6.22-ioc3-revert_commit_691cd0c.patch
 }
 
