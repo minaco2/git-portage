@@ -1,6 +1,6 @@
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-proxy/haproxy/Attic/haproxy-1.3.14.6.ebuild,v 1.1 2008/07/08 21:24:13 mrness Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-proxy/haproxy/Attic/haproxy-1.3.14.11.ebuild,v 1.1 2009/01/10 11:36:33 mrness Exp $
 
 inherit linux-info versionator
 

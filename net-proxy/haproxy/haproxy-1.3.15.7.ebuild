@@ -1,6 +1,6 @@
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-proxy/haproxy/Attic/haproxy-1.3.15.2.ebuild,v 1.1 2008/07/08 21:24:13 mrness Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-proxy/haproxy/Attic/haproxy-1.3.15.7.ebuild,v 1.1 2009/01/10 11:36:33 mrness Exp $
 
 inherit versionator
 
@@ -18,7 +18,7 @@ RDEPEND="${DEPEND}"
 
 src_compile() {
 	local ARGS="TARGET=linux26"
-	use pcre && ARGS="${ARGS} REGEX=pcre"
+	use pcre && ARGS="${ARGS} USE_PCRE=1"
 	emake ADDINC="${CFLAGS}" LDFLAGS="${LDFLAGS}" ${ARGS}
 }
 
