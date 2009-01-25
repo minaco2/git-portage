@@ -1,6 +1,6 @@
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-i18n/scim-bridge/Attic/scim-bridge-0.4.15-r2.ebuild,v 1.1 2008/10/18 16:54:10 matsuu Exp $
+# $Header: /var/cvsroot/gentoo-x86/app-i18n/scim-bridge/Attic/scim-bridge-0.4.15.2.ebuild,v 1.1 2009/01/25 06:19:07 matsuu Exp $
 
 EAPI="1"
 WANT_AUTOMAKE="latest"
@@ -38,6 +38,8 @@ DEPEND="${RDEPEND}
 	dev-util/intltool
 	doc? ( app-doc/doxygen )"
 
+S="${WORKDIR}/${P%.*}"
+
 get_gtk_confdir() {
 	if use amd64 || ( [ "${CONF_LIBDIR}" == "lib32" ] && use x86 ) ; then
 		echo "/etc/gtk-2.0/${CHOST}"
@@ -55,7 +57,8 @@ pkg_setup() {
 src_unpack() {
 	unpack ${A}
 	cd "${S}"
-	epatch "${FILESDIR}"/${PN}-0.4.14-qt4.patch
+	epatch "${FILESDIR}/${P}-qt4.patch"
+	epatch "${FILESDIR}/${P}-gcc43.patch"
 	# bug #241954
 	intltoolize --force
 	eautoreconf
