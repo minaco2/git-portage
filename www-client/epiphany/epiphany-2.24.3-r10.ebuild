@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/epiphany/Attic/epiphany-2.24.1-r10.ebuild,v 1.4 2009/01/08 16:47:31 armin76 Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/epiphany/Attic/epiphany-2.24.3-r10.ebuild,v 1.1 2009/01/26 22:25:01 eva Exp $
 
 EAPI="1"
 
