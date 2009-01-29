@@ -1,8 +1,8 @@
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sci-visualization/zhu3d/Attic/zhu3d-4.1.2.ebuild,v 1.1 2008/08/30 16:26:19 bicatali Exp $
+# $Header: /var/cvsroot/gentoo-x86/sci-visualization/zhu3d/Attic/zhu3d-4.1.8.ebuild,v 1.1 2009/01/29 11:17:40 bicatali Exp $
 
-EAPI=1
+EAPI=2
 
 inherit eutils qt4
 
@@ -17,15 +17,11 @@ KEYWORDS="~amd64 ~x86"
 SLOT="0"
 
 RDEPEND="|| ( ( x11-libs/qt-gui:4 x11-libs/qt-opengl:4 )
-		=x11-libs/qt-4.3*:4 )
-		virtual/glu"
+		x11-libs/qt:4[opengl] )
+	virtual/glu"
 DEPEND="${RDEPEND}"
 
-QT4_BUILT_WITH_USE_CHECK="opengl"
-
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
+src_prepare() {
 	local datadir=/usr/share/${PN}
 	sed -i \
 		-e "s:^SYSDIR=:SYSDIR=${datadir}/system:" \
@@ -35,22 +31,21 @@ src_unpack() {
 		${PN}.pri || die "sed zhu3d.pri failed"
 }
 
-src_compile() {
-	eqmake4 || die "eqmake4 failed"
-	emake || die "emake failed"
+src_configure() {
+	eqmake4
 }
 
 src_install() {
-	# not working: emake install INSTALL_ROOT="${D}"
+	# not working: emake install INSTALL_ROOT="${D}" || die
 	dobin zhu3d || die
 
 	dodoc {readme,src/changelog}.txt || die
 	dohtml doc/* || die
 
 	insinto /usr/share/${PN}
+	rm -f system/languages/*.ts
 	doins -r work system || die
 
 	doicon system/icons/${PN}.png || die
-	make_desktop_entry ${PN} Zhu3D ${PN} \
-		"Education;Science;Math;Qt"
+	make_desktop_entry ${PN} Zhu3D ${PN} "Education;Science;Math;Qt"
 }
