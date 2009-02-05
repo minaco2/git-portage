@@ -1,6 +1,6 @@
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-emulation/emul-linux-x86-java/Attic/emul-linux-x86-java-1.6.0.07.ebuild,v 1.3 2008/09/16 20:09:04 serkan Exp $
+# $Header: /var/cvsroot/gentoo-x86/app-emulation/emul-linux-x86-java/Attic/emul-linux-x86-java-1.6.0.12.ebuild,v 1.1 2009/02/05 21:36:01 serkan Exp $
 
 inherit versionator pax-utils java-vm-2 eutils
 
@@ -16,7 +16,7 @@ SRC_URI="http://dlc.sun.com/dlj/binaries/${At}"
 
 SLOT="1.6"
 LICENSE="dlj-1.1"
-KEYWORDS="-* amd64"
+KEYWORDS="-* ~amd64"
 RESTRICT="strip"
 IUSE="X alsa nsplugin"
 
@@ -70,6 +70,7 @@ src_install() {
 		fi
 
 		install_mozilla_plugin /opt/${P}/plugin/i386/$plugin_dir/libjavaplugin_oji.so
+		install_mozilla_plugin /opt/${P}/lib/i386/libnpjp2.so plugin2
 	fi
 
 	# FIXME figure out how to handle the control pannel conflict with
@@ -90,6 +91,13 @@ src_install() {
 pkg_postinst() {
 	# Set as default VM if none exists
 	java-vm-2_pkg_postinst
+
+	elog
+	elog "Two variants of the nsplugin are available via eselect java-nsplugin:"
+	elog "${VMHANDLE} and ${VMHANDLE}-plugin2 (the Next-Generation Plug-In) "
+	ewarn "Note that the ${VMHANDLE}-plugin2 works only in Firefox 3!"
+	elog "For more info see https://jdk6.dev.java.net/plugin2/"
+	elog
 
 	if ! use X; then
 		local xwarn="X11 libraries and/or"
