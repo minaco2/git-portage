@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-mobilephone/gnokii/Attic/gnokii-0.6.27-r1.ebuild,v 1.1 2009/01/11 17:29:52 mrness Exp $
+# $Header: /var/cvsroot/gentoo-x86/app-mobilephone/gnokii/gnokii-0.6.27-r2.ebuild,v 1.1 2009/02/28 09:44:40 mrness Exp $
 
 inherit eutils linux-info autotools
 
@@ -56,7 +56,7 @@ src_compile() {
 		$(use_enable irda) \
 		$(use_enable bluetooth) \
 		$(use_with X x) \
-		$(use_with sms smsd) \
+		$(use_enable sms smsd) \
 		$(use_enable mysql) \
 		$(use_enable postgres) \
 		$(use_enable debug fulldebug) \
