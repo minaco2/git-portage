@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-mobilephone/gammu/Attic/gammu-1.26.1.ebuild,v 1.1 2009/09/12 05:03:36 mrness Exp $
+# $Header: /var/cvsroot/gentoo-x86/app-mobilephone/gammu/Attic/gammu-1.26.1-r1.ebuild,v 1.1 2009/09/21 04:38:37 mrness Exp $
 
 EAPI="2"
 
@@ -69,7 +69,7 @@ src_configure() {
 		$(cmake-utils_use_with nls Iconv) \
 		-DBUILD_SHARED_LIBS=ON -DINSTALL_DOC_DIR=share/doc/${PF}"
 	if use python; then
-		mycmakeargs="${mycmakearg} -DBUILD_PYTHON=/usr/bin/python"
+		mycmakeargs="${mycmakeargs} -DBUILD_PYTHON=/usr/bin/python"
 	fi
 	cmake-utils_src_configure
 }
