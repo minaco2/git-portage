@@ -1,6 +1,6 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-python/Djblets/Attic/Djblets-0.6.20.ebuild,v 1.1 2012/08/03 07:41:02 xmw Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-python/Djblets/Djblets-0.6.22.ebuild,v 1.1 2012/08/03 08:03:20 xmw Exp $
 
 EAPI=4
 PYTHON_DEPEND="2"
