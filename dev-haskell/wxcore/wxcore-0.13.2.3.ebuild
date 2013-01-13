@@ -1,13 +1,13 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-haskell/wxcore/wxcore-0.90.0.3.ebuild,v 1.2 2013/01/13 11:57:38 gienah Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-haskell/wxcore/wxcore-0.13.2.3.ebuild,v 1.1 2013/01/13 11:57:38 gienah Exp $
 
 EAPI=5
 
-WX_GTK_VER="2.9"
+WX_GTK_VER="2.8"
 
 CABAL_FEATURES="lib profile haddock hoogle hscolour"
-inherit base haskell-cabal
+inherit base haskell-cabal wxwidgets
 
 DESCRIPTION="wxHaskell core"
 HOMEPAGE="http://haskell.org/haskellwiki/WxHaskell"
@@ -20,13 +20,14 @@ IUSE=""
 
 RDEPEND="dev-haskell/parsec:=[profile?]
 		dev-haskell/stm:=[profile?]
-		>=dev-haskell/wxc-0.90.0.4:${WX_GTK_VER}=[profile?]
-		>=dev-haskell/wxdirect-0.90:${WX_GTK_VER}=[profile?]
-		>=dev-lang/ghc-6.12.1:="
+		>dev-haskell/wxdirect-0.12.1.2:${WX_GTK_VER}=[profile?]
+		<dev-haskell/wxdirect-0.90:${WX_GTK_VER}=[profile?]
+		>=dev-lang/ghc-6.12.1:=
+		x11-libs/wxGTK:${WX_GTK_VER}=[X,gstreamer,opengl]"
 DEPEND="${RDEPEND}
 		>=dev-haskell/cabal-1.2"
 
-PATCHES=("${FILESDIR}/${PN}-0.90.0.1-ghc-7.5.patch")
+PATCHES=("${FILESDIR}/${PN}-0.13.2.3-ghc-7.6.patch")
 
 src_prepare() {
 	base_src_prepare
