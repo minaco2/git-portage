@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-ruby/listen/listen-0.7.0.ebuild,v 1.2 2013/01/15 06:43:36 zerochaos Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-ruby/listen/listen-0.7.2.ebuild,v 1.2 2013/01/15 06:43:37 zerochaos Exp $
 
 EAPI=5
 
