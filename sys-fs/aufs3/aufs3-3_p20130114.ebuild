@@ -1,8 +1,8 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-fs/aufs3/aufs3-3_p20130107.ebuild,v 1.4 2013/01/16 11:46:40 jlec Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-fs/aufs3/aufs3-3_p20130114.ebuild,v 1.2 2013/01/16 11:46:40 jlec Exp $
 
-EAPI=4
+EAPI=5
 
 inherit eutils flag-o-matic linux-info linux-mod multilib toolchain-funcs
 
@@ -23,7 +23,9 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="debug doc fuse hfs inotify kernel-patch nfs pax_kernel ramfs"
 
-DEPEND="dev-vcs/git"
+DEPEND="
+	dev-util/patchutils
+	dev-vcs/git"
 RDEPEND="
 	!sys-fs/aufs
 	!sys-fs/aufs2"
@@ -63,24 +65,28 @@ pkg_setup() {
 		UTIL_BRANCH="${KV_MINOR}"
 	fi
 
-	if ! ( patch -p1 --dry-run --force -R -d ${KV_DIR} < "${FILESDIR}"/${PV}/${PN}-standalone-${PATCH_BRANCH}.patch >/dev/null && \
-		patch -p1 --dry-run --force -R -d ${KV_DIR} < "${FILESDIR}"/${PV}/${PN}-base-${PATCH_BRANCH}.patch >/dev/null ); then
+	pushd "${T}" &> /dev/null
+	unpack ${A}
+	cd ${P}/${PN}-standalone
+	local module_branch=origin/${PN}.${PATCH_BRANCH}
+	git checkout -q -b local-gentoo ${module_branch} || die
+	combinediff ${PN}-base.patch ${PN}-standalone.patch > ${PN}-standalone-base-combined.patch
+	if ! ( patch -p1 --dry-run --force -R -d ${KV_DIR} < ${PN}-standalone-base-combined.patch > /dev/null ); then
 		if use kernel-patch; then
 			cd ${KV_DIR}
 			ewarn "Patching your kernel..."
-			patch --no-backup-if-mismatch --force -p1 -R -d ${KV_DIR} < "${FILESDIR}"/${PV}/${PN}-standalone-${PATCH_BRANCH}.patch >/dev/null
-			patch --no-backup-if-mismatch --force -p1 -R -d ${KV_DIR} < "${FILESDIR}"/${PV}/${PN}-base-${PATCH_BRANCH}.patch >/dev/null
-			epatch "${FILESDIR}"/${PV}/${PN}-{base,standalone}-${PATCH_BRANCH}.patch
+			patch --no-backup-if-mismatch --force -p1 -R -d ${KV_DIR} < "${T}"/${P}/${PN}-standalone/${PN}-standalone-base-combined.patch >/dev/null
+			epatch "${T}"/${P}/${PN}-standalone/${PN}-standalone-base-combined.patch
 			ewarn "You need to compile your kernel with the applied patch"
 			ewarn "to be able to load and use the aufs kernel module"
 		else
 			eerror "You need to apply a patch to your kernel to compile and run the ${PN} module"
 			eerror "Either enable the kernel-patch useflag to do it with this ebuild"
-			eerror "or apply ${FILESDIR}/${PN}-base-${PATCH_BRANCH}.patch and"
-			eerror "${FILESDIR}/${PN}-standalone-${PATCH_BRANCH}.patch by hand"
+			eerror "or apply ${EPRFIX}/usr/share/doc/${PF}/${PN}-standalone-base-combined.patch by hand"
 			die "missing kernel patch, please apply it first"
 		fi
 	fi
+	popd &> /dev/null
 	export PKG_SETUP_HAS_BEEN_RAN=1
 }
 
@@ -143,6 +149,8 @@ src_install() {
 	insinto /usr/share/doc/${PF}
 
 	use doc && doins -r Documentation
+
+	use kernel-patch || doins "${T}"/${P}/${PN}-standalone/${PN}-standalone-base-combined.patch
 
 	dodoc Documentation/filesystems/aufs/README
 
