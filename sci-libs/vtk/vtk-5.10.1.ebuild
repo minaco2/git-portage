@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sci-libs/vtk/vtk-5.10.1.ebuild,v 1.2 2013/01/10 16:18:00 jlec Exp $
+# $Header: /var/cvsroot/gentoo-x86/sci-libs/vtk/vtk-5.10.1.ebuild,v 1.5 2013/01/17 21:15:03 aballier Exp $
 
 EAPI=3
 
@@ -76,6 +76,8 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-5.6.0-odbc.patch
 	"${FILESDIR}"/${PN}-5.6.1-ffmpeg.patch
 	"${FILESDIR}"/${PN}-5.6.1-libav-0.8.patch
+	"${FILESDIR}"/${P}-tcl8.6.patch
+	"${FILESDIR}"/${P}-ffmpeg-1.patch
 	)
 
 pkg_setup() {
@@ -88,7 +90,7 @@ pkg_setup() {
 	java-pkg-opt-2_pkg_setup
 
 	use python && python_set_active_version 2
-	append-cppflags -D__STDC_CONSTANT_MACROS -DUSE_INTERP_ERRORLINE
+	append-cppflags -D__STDC_CONSTANT_MACROS
 }
 
 src_configure() {
@@ -225,7 +227,7 @@ src_install() {
 		insinto /usr/share/${PN}
 		mv -v Examples examples
 		doins -r examples || die
-		mv -v "${WORKDIR}"/{VTKData,data} || die
+		mv -v "${WORKDIR}"/{VTKData${PV},data} || die
 		doins -r "${WORKDIR}"/data || die
 	fi
 
