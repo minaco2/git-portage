@@ -1,6 +1,27 @@
 # ChangeLog for dev-python/sphinx
 # Copyright 1999-2013 Gentoo Foundation; Distributed under the GPL v2
-# $Header: /var/cvsroot/gentoo-x86/dev-python/sphinx/ChangeLog,v 1.121 2013/01/04 13:10:28 ago Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-python/sphinx/ChangeLog,v 1.126 2013/01/19 23:58:19 mgorny Exp $
+
+  19 Jan 2013; Michał Górny <mgorny@gentoo.org> sphinx-1.1.3-r5.ebuild:
+  Enable pypy2.0 for deps.
+
+  18 Jan 2013; Michał Górny <mgorny@gentoo.org> sphinx-1.1.3-r5.ebuild:
+  Enable python3.3. Properly die on test failure.
+
+  15 Jan 2013; Michał Górny <mgorny@gentoo.org> sphinx-1.1.3-r5.ebuild:
+  Improve grammar. Thanks to radhermit.
+
+*sphinx-1.1.3-r5 (15 Jan 2013)
+
+  15 Jan 2013; Michał Górny <mgorny@gentoo.org> +sphinx-1.1.3-r5.ebuild,
+  -sphinx-1.1.3-r4.ebuild:
+  Make sure to always generate and install Grammar pickles. Work-around the
+  older ebuild's postrm() removing it.
+
+*sphinx-1.1.3-r4 (14 Jan 2013)
+
+  14 Jan 2013; Michał Górny <mgorny@gentoo.org> +sphinx-1.1.3-r4.ebuild:
+  Migrate to distutils-r1.
 
   04 Jan 2013; Agostino Sarubbo <ago@gentoo.org> sphinx-1.1.3-r3.ebuild:
   Stable for ppc64, wrt bug #449424
