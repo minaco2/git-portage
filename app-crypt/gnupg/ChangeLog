@@ -1,6 +1,37 @@
 # ChangeLog for app-crypt/gnupg
 # Copyright 1999-2013 Gentoo Foundation; Distributed under the GPL v2
-# $Header: /var/cvsroot/gentoo-x86/app-crypt/gnupg/ChangeLog,v 1.448 2013/01/07 22:23:33 ago Exp $
+# $Header: /var/cvsroot/gentoo-x86/app-crypt/gnupg/ChangeLog,v 1.457 2013/01/19 21:16:55 alonbl Exp $
+
+  19 Jan 2013; Alon Bar-Lev <alonbl@gentoo.org>
+  files/gnupg-2.0.17-gpgsm-gencert.patch:
+  cleanup files
+
+  19 Jan 2013; Alon Bar-Lev <alonbl@gentoo.org>
+  -files/gnupg-2.0.17-libgrcrypt150-bugfix.patch,
+  files/gnupg-2.0.17-gpgsm-gencert.patch:
+  cleanup files
+
+*gnupg-1.4.13-r1 (19 Jan 2013)
+
+  19 Jan 2013; Alon Bar-Lev <alonbl@gentoo.org> +gnupg-1.4.13-r1.ebuild,
+  gnupg-2.0.19-r1.ebuild, metadata.xml:
+  Add mta USE for --enable-mailto, bug#382415
+
+  13 Jan 2013; Alon Bar-Lev <alonbl@gentoo.org> -gnupg-1.4.11.ebuild,
+  -gnupg-1.4.12.ebuild, -gnupg-2.0.17-r2.ebuild, -gnupg-2.0.17-r3.ebuild,
+  -gnupg-2.0.17.ebuild, -gnupg-2.0.18.ebuild, metadata.xml:
+  Cleanup old ebuilds
+
+  13 Jan 2013; Raúl Porcel <armin76@gentoo.org> gnupg-1.4.13.ebuild:
+  s390/sh stable wrt #449546
+
+  12 Jan 2013; Alon Bar-Lev <alonbl@gentoo.org> gnupg-2.0.19-r1.ebuild:
+  Add curl static-libs USE for static USE, bug#408121
+
+*gnupg-2.0.19-r1 (12 Jan 2013)
+
+  12 Jan 2013; Alon Bar-Lev <alonbl@gentoo.org> +gnupg-2.0.19-r1.ebuild:
+  Add bzip2 with static-libs, per bug#390163
 
   07 Jan 2013; Agostino Sarubbo <ago@gentoo.org> gnupg-1.4.13.ebuild:
   Stable for alpha, wrt bug #449546
