@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-boot/grub/grub-2.00-r1.ebuild,v 1.6 2013/01/07 03:40:12 floppym Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-boot/grub/grub-2.00-r1.ebuild,v 1.8 2013/01/19 03:05:28 mattst88 Exp $
 
 EAPI=4
 
@@ -46,7 +46,8 @@ GRUB_PLATFORMS=(
 )
 IUSE+=" ${GRUB_PLATFORMS[@]/#/grub_platforms_}"
 
-REQUIRED_USE="grub_platforms_qemu? ( truetype )"
+REQUIRED_USE="grub_platforms_qemu? ( truetype )
+	grub_platforms_yeeloong? ( truetype )"
 
 # os-prober: Used on runtime to detect other OSes
 # xorriso (dev-libs/libisoburn): Used on runtime for mkrescue
@@ -89,7 +90,8 @@ RDEPEND+="
 "
 if [[ -n ${DO_AUTORECONF} ]] ; then
 	DEPEND+=" >=sys-devel/autogen-5.10"
-else
+fi
+if [[ ${PV} != 9999 ]]; then
 	DEPEND+=" app-arch/xz-utils"
 fi
 
