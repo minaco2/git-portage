@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/games-fps/warsow/warsow-1.0.ebuild,v 1.7 2013/01/19 13:44:28 hasufell Exp $
+# $Header: /var/cvsroot/gentoo-x86/games-fps/warsow/warsow-1.02-r1.ebuild,v 1.2 2013/01/19 13:44:28 hasufell Exp $
 
 EAPI=4
 inherit eutils check-reqs gnome2-utils games
@@ -8,18 +8,19 @@ inherit eutils check-reqs gnome2-utils games
 MY_P=${PN}_${PV}
 DESCRIPTION="Multiplayer FPS based on the QFusion engine (evolved from Quake 2)"
 HOMEPAGE="http://www.warsow.net/"
-SRC_URI="http://funpark.warsow-esport.net/~${PN}/${PV}/${MY_P}_unified.tar.gz
+SRC_URI="http://funpark.warsow-esport.net/~${PN}/1.0/${PN}_1.0_unified.tar.gz
 	http://funpark.warsow-esport.net/~${PN}/${PV}/${MY_P}_sdk.tar.gz
+	http://funpark.warsow-esport.net/~${PN}/${PV}/${MY_P}_update.zip
 	mirror://gentoo/${PN}.png"
 
 # ZLIB: bundled angelscript
-# MIT: bundled libRocket
-LICENSE="GPL-2 MIT ZLIB warsow"
+LICENSE="GPL-2 ZLIB warsow"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="~amd64 ~x86"
 IUSE="+angelscript debug dedicated irc openal server"
 
-RDEPEND="media-libs/freetype
+RDEPEND=">=dev-libs/libRocket-1.2.1_p20130110
+	media-libs/freetype
 	net-misc/curl
 	sys-libs/zlib
 	!dedicated? (
@@ -37,6 +38,7 @@ RDEPEND="media-libs/freetype
 		openal? ( media-libs/openal )
 	)"
 DEPEND="${RDEPEND}
+	app-arch/unzip
 	x11-misc/makedepend
 	!dedicated? (
 		x11-proto/xineramaproto
@@ -46,10 +48,18 @@ DEPEND="${RDEPEND}
 	openal? ( virtual/pkgconfig )"
 
 S=${WORKDIR}/${MY_P}_sdk/source
-S_U=${WORKDIR}/${MY_P}
+S_U=${WORKDIR}/${PN}_1.0
+S_UPDATE=${WORKDIR}/${MY_P}_update
 
 CHECKREQS_DISK_BUILD="1G"
 CHECKREQS_DISK_USR="500M"
+
+src_unpack() {
+	unpack ${PN}_1.0_unified.tar.gz ${MY_P}_sdk.tar.gz
+	mkdir "${S_UPDATE}" || die
+	cd "${S_UPDATE}" || die
+	unpack ${MY_P}_update.zip
+}
 
 src_prepare() {
 	sed -i \
@@ -106,15 +116,17 @@ src_compile() {
 	fi
 
 	emake \
+		V=YES \
+		SYSTEM_LIBS=YES \
 		BASE_ARCH=${arch} \
-		BINDIR=bin \
+		BINDIR=lib \
 		BUILD_ANGELWRAP=$(yesno angelscript) \
 		DEBUG_BUILD=$(yesno debug) \
 		${myconf[@]}
 }
 
 src_install() {
-	cd bin
+	cd lib
 
 	if ! use dedicated ; then
 		newgamesbin ${PN}.* ${PN}
@@ -132,6 +144,7 @@ src_install() {
 
 	insinto "${GAMES_DATADIR}"/${PN}
 	doins -r "${S_U}"/basewsw
+	doins -r "${S_UPDATE}"/basewsw
 
 	local so
 	for so in basewsw/*.so ; do
@@ -148,6 +161,7 @@ src_install() {
 	fi
 
 	dodoc "${S_U}"/docs/*
+	dodoc "${S_UPDATE}"/docs/*
 	prepgamesdirs
 }
 
