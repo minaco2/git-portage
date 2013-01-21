@@ -1,37 +1,35 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-fs/cryptsetup/cryptsetup-1.4.3.ebuild,v 1.9 2013/01/21 21:00:18 vapier Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-fs/cryptsetup/cryptsetup-1.6.0.ebuild,v 1.3 2013/01/21 21:00:18 vapier Exp $
 
 EAPI="4"
 
-inherit linux-info libtool
+inherit python linux-info libtool
 
 MY_P=${P/_rc/-rc}
 DESCRIPTION="Tool to setup encrypted devices with dm-crypt"
 HOMEPAGE="http://code.google.com/p/cryptsetup/"
 SRC_URI="http://cryptsetup.googlecode.com/files/${MY_P}.tar.bz2"
 
-LICENSE="GPL-2"
+LICENSE="GPL-2+"
 SLOT="0"
-KEYWORDS="alpha amd64 arm hppa ia64 ~mips ppc ppc64 s390 sh sparc x86"
-IUSE="nls selinux static static-libs udev"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86"
+IUSE="nls python reencrypt selinux static static-libs udev urandom"
 
 S=${WORKDIR}/${MY_P}
 
 LIB_DEPEND="dev-libs/libgpg-error[static-libs(+)]
-	>=dev-libs/popt-1.7[static-libs(+)]
-	>=sys-apps/util-linux-2.17.2[static-libs(+)]
-	>=dev-libs/libgcrypt-1.1.42[static-libs(+)]
-	>=sys-fs/lvm2-2.02.64[static-libs(+)]
-	>=sys-libs/e2fsprogs-libs-1.41[static-libs(+)]
+	dev-libs/popt[static-libs(+)]
+	sys-apps/util-linux[static-libs(+)]
+	dev-libs/libgcrypt[static-libs(+)]
+	sys-fs/lvm2[static-libs(+)]
+	sys-libs/e2fsprogs-libs[static-libs(+)]
 	udev? ( virtual/udev[static-libs(+)] )"
 # We have to always depend on ${LIB_DEPEND} rather than put behind
 # static? () because we provide a shared library which links against
 # these other packages. #414665
 RDEPEND="static-libs? ( ${LIB_DEPEND} )
 	${LIB_DEPEND//\[static-libs(+)]}
-	!<sys-apps/baselayout-2
-	!sys-fs/cryptsetup-luks
 	selinux? ( sys-libs/libselinux )"
 DEPEND="${RDEPEND}
 	static? ( ${LIB_DEPEND} )"
@@ -42,10 +40,14 @@ pkg_setup() {
 	local WARNING_CRYPTO_CBC="CONFIG_CRYPTO_CBC:\tis not set (required for kernel 2.6.19)\n"
 	local WARNING_CRYPTO="CONFIG_CRYPTO:\tis not set (required for cryptsetup)\n"
 	check_extra_config
+	if use python ; then
+		python_set_active_version 2
+		python_pkg_setup
+	fi
 }
 
 src_prepare() {
-	sed -i '/^LOOPDEV=/s:$: || exit 0:' tests/{compat,mode}-test
+	sed -i '/^LOOPDEV=/s:$: || exit 0:' tests/{compat,mode}-test || die
 	elibtoolize
 }
 
@@ -56,8 +58,11 @@ src_configure() {
 		$(use_enable static static-cryptsetup) \
 		$(use_enable static-libs static) \
 		$(use_enable nls) \
+		$(use_enable python) \
+		$(use_enable reencrypt cryptsetup-reencrypt) \
 		$(use_enable selinux) \
-		$(use_enable udev)
+		$(use_enable udev) \
+		$(use_enable !urandom dev-random)
 }
 
 src_test() {
@@ -74,11 +79,15 @@ src_test() {
 
 src_install() {
 	default
-	use static && { mv "${ED}"/sbin/cryptsetup{.static,} || die ; }
+	if use static ; then
+		mv "${ED}"/sbin/cryptsetup{.static,} || die
+		mv "${ED}"/sbin/veritysetup{.static,} || die
+		use reencrypt && { mv "${ED}"/sbin/cryptsetup-reencrypt{.static,} || die ; }
+	fi
 	use static-libs || find "${ED}"/usr -name '*.la' -delete
 
 	newconfd "${FILESDIR}"/1.0.6-dmcrypt.confd dmcrypt
-	newinitd "${FILESDIR}"/dmcrypt.rc dmcrypt
+	newinitd "${FILESDIR}"/1.5.1-dmcrypt.rc dmcrypt
 }
 
 pkg_postinst() {
