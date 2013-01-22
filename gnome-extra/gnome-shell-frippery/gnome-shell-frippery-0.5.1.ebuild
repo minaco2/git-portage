@@ -1,8 +1,8 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-extra/gnome-shell-frippery/gnome-shell-frippery-0.4.1.ebuild,v 1.2 2013/01/22 08:25:54 tetromino Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-extra/gnome-shell-frippery/gnome-shell-frippery-0.5.1.ebuild,v 1.1 2013/01/22 08:25:54 tetromino Exp $
 
-EAPI="4"
+EAPI="5"
 
 DESCRIPTION="Unofficial extension pack providing GNOME 2-like features for GNOME 3"
 HOMEPAGE="http://intgat.tigress.co.uk/rmy/extensions/index.html"
@@ -17,7 +17,7 @@ RDEPEND="app-admin/eselect-gnome-shell-extensions
 	>=dev-libs/gjs-1.29
 	dev-libs/gobject-introspection
 	gnome-base/gnome-menus:3[introspection]
-	>=gnome-base/gnome-shell-3.4
+	>=gnome-base/gnome-shell-3.6
 	media-libs/clutter:1.0[introspection]
 	x11-libs/pango[introspection]"
 DEPEND=""
