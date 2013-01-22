@@ -1,10 +1,10 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-auth/otpcalc/otpcalc-0.97-r6.ebuild,v 1.1 2012/12/15 12:33:05 ulm Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-auth/otpcalc/otpcalc-0.97-r6.ebuild,v 1.8 2013/01/22 17:32:15 ago Exp $
 
 EAPI=5
 
-inherit eutils
+inherit eutils toolchain-funcs
 
 DESCRIPTION="A One Time Password and S/Key calculator for X"
 HOMEPAGE="http://killa.net/infosec/otpCalc/"
@@ -12,7 +12,7 @@ SRC_URI="http://killa.net/infosec/otpCalc/otpCalc-${PV}.tar.gz"
 
 LICENSE="GPL-2+" # bundled crypto functions are not used
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~ppc ~sparc ~x86"
+KEYWORDS="alpha amd64 ppc sparc x86"
 IUSE=""
 
 RDEPEND="x11-libs/gtk+:2
@@ -40,6 +40,8 @@ src_prepare() {
 		-e 's:$(CC) $(CFLAGS) $^:$(CC) $(LDFLAGS) $(CFLAGS) $^:' \
 		-e "s#-s -O3#${CFLAGS}#g" \
 		Makefile.in || die
+
+	tc-export CC
 }
 
 src_install() {
