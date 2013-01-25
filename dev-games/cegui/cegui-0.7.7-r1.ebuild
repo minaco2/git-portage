@@ -1,6 +1,6 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-games/cegui/cegui-0.7.7-r1.ebuild,v 1.1 2012/12/20 22:44:04 hasufell Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-games/cegui/cegui-0.7.7-r1.ebuild,v 1.4 2013/01/25 15:08:09 ago Exp $
 
 EAPI=4
 inherit eutils
@@ -14,7 +14,7 @@ SRC_URI="mirror://sourceforge/crayzedsgui/${MY_P}.tar.gz
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="~amd64 -ppc ~x86"
+KEYWORDS="amd64 -ppc x86"
 IUSE="bidi debug devil doc examples expat gtk irrlicht lua ogre opengl pcre static-libs tinyxml truetype xerces-c +xml zip"
 REQUIRED_USE="|| ( expat tinyxml xerces-c xml )" # bug 362223
 
@@ -46,11 +46,6 @@ DEPEND="${RDEPEND}
 S=${WORKDIR}/${MY_P}
 S2=${WORKDIR}/${MY_P}_static
 
-src_unpack() {
-	default
-	cp -a "${S}" "${S2}" || die
-}
-
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-irrlicht-1.8.patch
 
@@ -70,6 +65,10 @@ src_prepare() {
 	if use examples ; then
 		cp -r Samples Samples.clean
 		rm -f $(find Samples.clean -name 'Makefile*')
+	fi
+
+	if use static-libs ; then
+		cp -a "${S}" "${S2}" || die
 	fi
 }
 
