@@ -1,20 +1,21 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/games-emulation/vbam/vbam-9999.ebuild,v 1.4 2013/01/25 22:48:59 radhermit Exp $
+# $Header: /var/cvsroot/gentoo-x86/games-emulation/vbam/vbam-1.8.0.1149.ebuild,v 1.3 2013/01/25 22:48:59 radhermit Exp $
 
 EAPI=4
 WX_GTK_VER="2.8"
 
-inherit cmake-utils wxwidgets subversion gnome2-utils fdo-mime games
+inherit eutils cmake-utils wxwidgets gnome2-utils fdo-mime games
 
 ESVN_REPO_URI="https://vbam.svn.sourceforge.net/svnroot/vbam/trunk"
 
 DESCRIPTION="Game Boy, GBC, and GBA emulator forked from VisualBoyAdvance"
 HOMEPAGE="http://vba-m.ngemu.com"
+SRC_URI="http://dev.gentoo.org/~radhermit/distfiles/${P}.tar.xz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="cairo ffmpeg gtk link lirc nls openal +sdl wxwidgets"
 REQUIRED_USE="|| ( sdl gtk wxwidgets )"
 
@@ -38,9 +39,12 @@ RDEPEND=">=media-libs/libpng-1.4
 DEPEND="${RDEPEND}
 	x86? ( || ( dev-lang/nasm dev-lang/yasm ) )
 	nls? ( sys-devel/gettext )
+	app-arch/xz-utils
 	virtual/pkgconfig"
 
 src_prepare() {
+	epatch "${FILESDIR}"/${P}-desktop.patch
+
 	# Fix issue with zlib-1.2.5.1 macros (bug #383179)
 	sed -i '1i#define OF(x) x' src/common/memgzio.c || die
 
