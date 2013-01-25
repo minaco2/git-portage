@@ -1,6 +1,25 @@
 # ChangeLog for gnome-base/gnome-control-center
 # Copyright 1999-2013 Gentoo Foundation; Distributed under the GPL v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-control-center/ChangeLog,v 1.117 2013/01/06 09:35:01 ago Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-control-center/ChangeLog,v 1.121 2013/01/25 22:57:43 eva Exp $
+
+  25 Jan 2013; Gilles Dartiguelongue <eva@gentoo.org> metadata.xml:
+  Remove unused local description.
+
+  25 Jan 2013; Gilles Dartiguelongue <eva@gentoo.org>
+  -gnome-control-center-3.4.2-r1.ebuild,
+  -files/gnome-control-center-3.4.2-cups-1.6.patch,
+  -files/gnome-control-center-3.4.2-gentoo-paths.patch,
+  -files/gnome-control-center-3.4.2-optional-bt-colord-goa-wacom.patch,
+  -files/org.gnome.control-center.defaultbackground.policy:
+  Clean up old revisions and files.
+
+  22 Jan 2013; Alexandre Rostovtsev <tetromino@gentoo.org> metadata.xml:
+  Switch to global systemd USE flag.
+
+  22 Jan 2013; Alexandre Rostovtsev <tetromino@gentoo.org>
+  gnome-control-center-3.4.2-r1.ebuild, gnome-control-center-3.6.3-r1.ebuild,
+  metadata.xml:
+  Rename USE=wacom to INPUT_DEVICES=wacom to match the rest of the tree.
 
   06 Jan 2013; Agostino Sarubbo <ago@gentoo.org>
   gnome-control-center-3.6.3-r1.ebuild:
