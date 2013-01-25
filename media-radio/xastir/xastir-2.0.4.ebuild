@@ -1,9 +1,9 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-radio/xastir/xastir-2.0.4.ebuild,v 1.1 2012/12/07 14:31:19 tomjbe Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-radio/xastir/xastir-2.0.4.ebuild,v 1.4 2013/01/25 20:01:49 tomjbe Exp $
 
 EAPI=4
-inherit autotools eutils
+inherit autotools eutils toolchain-funcs
 
 DESCRIPTION="X Amateur Station Tracking and Information Reporting"
 HOMEPAGE="http://xastir.sourceforge.net/"
@@ -11,7 +11,7 @@ SRC_URI="mirror://sourceforge/${PN}/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 x86"
 IUSE="festival gdal geotiff graphicsmagick"
 
 DEPEND=">=x11-libs/motif-2.3:0
@@ -61,6 +61,10 @@ src_configure() {
 		$(use_with geotiff) \
 		$(use_with gdal) \
 		$(use_with festival)
+}
+
+src_compile() {
+	emake AR="$(tc-getAR)"
 }
 
 src_install() {
