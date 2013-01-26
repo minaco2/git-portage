@@ -1,6 +1,33 @@
 # ChangeLog for sys-kernel/gentoo-sources
 # Copyright 1999-2013 Gentoo Foundation; Distributed under the GPL v2
-# $Header: /var/cvsroot/gentoo-x86/sys-kernel/gentoo-sources/ChangeLog,v 1.1048 2013/01/02 19:38:33 mpagano Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-kernel/gentoo-sources/ChangeLog,v 1.1053 2013/01/26 11:05:18 maekke Exp $
+
+  26 Jan 2013; Markus Meier <maekke@gentoo.org> gentoo-sources-3.6.11.ebuild:
+  arm stable, bug #447864
+
+  24 Jan 2013; Michael Pagano <mpagano@gentoo.org>
+  -gentoo-sources-3.3.8.ebuild, -gentoo-sources-3.3.8-r1.ebuild,
+  -gentoo-sources-3.6.10.ebuild, -gentoo-sources-3.7.0.ebuild,
+  -gentoo-sources-3.7.1.ebuild:
+  Clean up old, unsupported versions
+
+*gentoo-sources-3.7.4 (24 Jan 2013)
+
+  24 Jan 2013; Michael Pagano <mpagano@gentoo.org>
+  +gentoo-sources-3.7.4.ebuild:
+  Linux patch 3.7.4
+
+*gentoo-sources-3.7.3 (18 Jan 2013)
+
+  18 Jan 2013; Michael Pagano <mpagano@gentoo.org>
+  +gentoo-sources-3.7.3.ebuild:
+  Linux patch 3.7.3. FBCONDECOR patch thanks to Jeremy
+
+*gentoo-sources-3.7.2 (11 Jan 2013)
+
+  11 Jan 2013; Michael Pagano <mpagano@gentoo.org>
+  +gentoo-sources-3.7.2.ebuild:
+  Linux patch 3.7.2
 
   02 Jan 2013; Michael Pagano <mpagano@gentoo.org>
   -gentoo-sources-3.0.49.ebuild, -gentoo-sources-3.0.53.ebuild,
