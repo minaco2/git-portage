@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/eclass/distutils-r1.eclass,v 1.40 2013/01/11 01:06:37 floppym Exp $
+# $Header: /var/cvsroot/gentoo-x86/eclass/distutils-r1.eclass,v 1.48 2013/01/27 16:39:23 mgorny Exp $
 
 # @ECLASS: distutils-r1
 # @MAINTAINER:
@@ -54,22 +54,55 @@ case "${EAPI:-0}" in
 		;;
 esac
 
+# @ECLASS-VARIABLE: DISTUTILS_OPTIONAL
+# @DEFAULT_UNSET
+# @DESCRIPTION:
+# If set to a non-null value, distutils part in the ebuild will
+# be considered optional. No dependencies will be added and no phase
+# functions will be exported.
+#
+# If you enable DISTUTILS_OPTIONAL, you have to set proper dependencies
+# for your package (using ${PYTHON_DEPS}) and to either call
+# distutils-r1 default phase functions or call the build system
+# manually.
+
+# @ECLASS-VARIABLE: DISTUTILS_SINGLE_IMPL
+# @DEFAULT_UNSET
+# @DESCRIPTION:
+# If set to a non-null value, the ebuild will support setting a single
+# Python implementation only. It will effectively replace the python-r1
+# eclass inherit with python-single-r1.
+#
+# Note that inheriting python-single-r1 will cause pkg_setup()
+# to be exported. It must be run in order for the eclass functions
+# to function properly.
+
 if [[ ! ${_DISTUTILS_R1} ]]; then
 
-inherit eutils multiprocessing python-r1
+inherit eutils
+
+if [[ ! ${DISTUTILS_SINGLE_IMPL} ]]; then
+	inherit multiprocessing python-r1
+else
+	inherit python-single-r1
+fi
 
 fi
 
-EXPORT_FUNCTIONS src_prepare src_configure src_compile src_test src_install
+if [[ ! ${DISTUTILS_OPTIONAL} ]]; then
+	EXPORT_FUNCTIONS src_prepare src_configure src_compile src_test src_install
+fi
 
 if [[ ! ${_DISTUTILS_R1} ]]; then
 
-RDEPEND=${PYTHON_DEPS}
-DEPEND=${PYTHON_DEPS}
+if [[ ! ${DISTUTILS_OPTIONAL} ]]; then
+	RDEPEND=${PYTHON_DEPS}
+	DEPEND=${PYTHON_DEPS}
+fi
 
 # @ECLASS-VARIABLE: DISTUTILS_JOBS
 # @DEFAULT_UNSET
-# @DECRIPTION:
+# @DESCRIPTION:
 # The number of parallel jobs to run for distutils-r1 parallel builds.
 # If unset, the job-count in ${MAKEOPTS} will be used.
 #
@@ -168,20 +201,21 @@ DEPEND=${PYTHON_DEPS}
 # @DESCRIPTION:
 # Run the setup.py using currently selected Python interpreter
 # (if ${PYTHON} is set; fallback 'python' otherwise). The setup.py will
-# be passed default command-line arguments, then ${mydistutilsargs[@]},
-# then any parameters passed to this command.
+# be passed default ${mydistutilsargs[@]}, then any parameters passed
+# to this command and optionally a standard option set (e.g. the build
+# directory in an ebuild using out-of-source builds).
 #
 # This command dies on failure.
 esetup.py() {
 	debug-print-function ${FUNCNAME} "${@}"
 
-	local args=()
+	local add_args=()
 	if [[ ! ${DISTUTILS_IN_SOURCE_BUILD} ]]; then
 		if [[ ! ${BUILD_DIR} ]]; then
 			die 'Out-of-source build requested, yet BUILD_DIR unset.'
 		fi
 
-		args+=(
+		add_args+=(
 			build
 			--build-base "${BUILD_DIR}"
 			# using a single directory for them helps us export ${PYTHONPATH}
@@ -192,7 +226,7 @@ esetup.py() {
 	fi
 
 	set -- "${PYTHON:-python}" setup.py \
-		"${args[@]}" "${mydistutilsargs[@]}" "${@}"
+		"${mydistutilsargs[@]}" "${@}" "${add_args[@]}"
 
 	echo "${@}" >&2
 	"${@}" || die
@@ -220,7 +254,8 @@ distutils-r1_python_prepare_all() {
 		fi
 	fi
 
-	if [[ ${DISTUTILS_IN_SOURCE_BUILD} ]]; then
+	if [[ ${DISTUTILS_IN_SOURCE_BUILD} && ! ${DISTUTILS_SINGLE_IMPL} ]]
+	then
 		# create source copies for each implementation
 		python_copy_sources
 	fi
@@ -228,9 +263,7 @@ distutils-r1_python_prepare_all() {
 
 # @FUNCTION: distutils-r1_python_prepare
 # @DESCRIPTION:
-# The default python_prepare(). Currently it is a no-op
-# but in the future it may apply implementation-specific quirks
-# to the build system.
+# The default python_prepare(). A no-op.
 distutils-r1_python_prepare() {
 	debug-print-function ${FUNCNAME} "${@}"
 
@@ -239,7 +272,7 @@ distutils-r1_python_prepare() {
 
 # @FUNCTION: distutils-r1_python_configure
 # @DESCRIPTION:
-# The default python_configure(). Currently a no-op.
+# The default python_configure(). A no-op.
 distutils-r1_python_configure() {
 	debug-print-function ${FUNCNAME} "${@}"
 
@@ -250,7 +283,8 @@ distutils-r1_python_configure() {
 # @USAGE: [additional-args...]
 # @DESCRIPTION:
 # The default python_compile(). Runs 'esetup.py build'. Any parameters
-# passed to this function will be passed to setup.py.
+# passed to this function will be appended to setup.py invocation,
+# i.e. passed as options to the 'build' command.
 distutils-r1_python_compile() {
 	debug-print-function ${FUNCNAME} "${@}"
 
@@ -259,7 +293,7 @@ distutils-r1_python_compile() {
 
 # @FUNCTION: distutils-r1_python_test
 # @DESCRIPTION:
-# The default python_test(). Currently a no-op.
+# The default python_test(). A no-op.
 distutils-r1_python_test() {
 	debug-print-function ${FUNCNAME} "${@}"
 
@@ -304,7 +338,8 @@ _distutils-r1_rename_scripts() {
 # @DESCRIPTION:
 # The default python_install(). Runs 'esetup.py install', appending
 # the optimization flags. Then renames the installed scripts.
-# Any parameters passed to this function will be passed to setup.py.
+# Any parameters passed to this function will be appended
+# to the setup.py invocation (i.e. as options to the 'install' command).
 distutils-r1_python_install() {
 	debug-print-function ${FUNCNAME} "${@}"
 
@@ -328,11 +363,14 @@ distutils-r1_python_install() {
 	addpredict /usr/lib/portage/pym
 
 	local root=${D}/_${EPYTHON}
+	[[ ${DISTUTILS_SINGLE_IMPL} ]] && root=${D}
 
 	esetup.py install "${flags[@]}" --root="${root}" "${@}"
-	_distutils-r1_rename_scripts "${root}"
 
-	_distutils-r1_merge_root "${root}" "${D}"
+	if [[ ! ${DISTUTILS_SINGLE_IMPL} ]]; then
+		_distutils-r1_rename_scripts "${root}"
+		_distutils-r1_merge_root "${root}" "${D}"
+	fi
 }
 
 # @FUNCTION: distutils-r1_merge_root
@@ -381,7 +419,7 @@ distutils-r1_python_install_all() {
 	debug-print-function ${FUNCNAME} "${@}"
 
 	if declare -p DOCS &>/dev/null; then
-		dodoc "${DOCS[@]}" || die "dodoc failed"
+		dodoc -r "${DOCS[@]}" || die "dodoc failed"
 	else
 		local f
 		# same list as in PMS
@@ -414,7 +452,9 @@ distutils-r1_run_phase() {
 	debug-print-function ${FUNCNAME} "${@}"
 
 	if [[ ${DISTUTILS_IN_SOURCE_BUILD} ]]; then
-		pushd "${BUILD_DIR}" &>/dev/null || die
+		if [[ ! ${DISTUTILS_SINGLE_IMPL} ]]; then
+			pushd "${BUILD_DIR}" >/dev/null || die
+		fi
 	else
 		local PYTHONPATH="${BUILD_DIR}/lib:${PYTHONPATH}"
 		export PYTHONPATH
@@ -424,7 +464,8 @@ distutils-r1_run_phase() {
 
 	mkdir -p "${TMPDIR}" || die
 
-	if [[ ${DISTUTILS_NO_PARALLEL_BUILD} ]]; then
+	if [[ ${DISTUTILS_NO_PARALLEL_BUILD} || ${DISTUTILS_SINGLE_IMPL} ]]
+	then
 		"${@}" 2>&1 | tee -a "${T}/build-${EPYTHON}.log"
 	else
 		(
@@ -434,8 +475,9 @@ distutils-r1_run_phase() {
 		multijob_post_fork
 	fi
 
-	if [[ ${DISTUTILS_IN_SOURCE_BUILD} ]]; then
-		popd &>/dev/null || die
+	if [[ ${DISTUTILS_IN_SOURCE_BUILD} && ! ${DISTUTILS_SINGLE_IMPL} ]]
+	then
+		popd >/dev/null || die
 	fi
 
 	# Store them for reuse.
@@ -450,9 +492,11 @@ distutils-r1_run_phase() {
 # @DESCRIPTION:
 # Run the given command, restoring the best-implementation state.
 _distutils-r1_run_common_phase() {
+	local DISTUTILS_ORIG_BUILD_DIR=${BUILD_DIR}
+
 	local EPYTHON=${_DISTUTILS_BEST_IMPL[0]}
 	local PYTHON=${_DISTUTILS_BEST_IMPL[1]}
-	local BEST_BUILD_DIR=${_DISTUTILS_BEST_IMPL[2]}
+	local BUILD_DIR=${_DISTUTILS_BEST_IMPL[2]}
 	local PYTHONPATH=${_DISTUTILS_BEST_IMPL[3]}
 
 	export EPYTHON PYTHON PYTHONPATH
@@ -468,14 +512,53 @@ _distutils-r1_run_common_phase() {
 _distutils-r1_multijob_init() {
 	debug-print-function ${FUNCNAME} "${@}"
 
-	local opts
-	if [[ ${DISTUTILS_JOBS} ]]; then
-		opts=-j${DISTUTILS_JOBS}
-	else
-		opts=${MAKEOPTS}
-	fi
+	if [[ ! ${DISTUTILS_NO_PARALLEL_BUILD} && ! ${DISTUTILS_SINGLE_IMPL} ]]
+	then
+		local opts
+		if [[ ${DISTUTILS_JOBS} ]]; then
+			opts=-j${DISTUTILS_JOBS}
+		else
+			opts=${MAKEOPTS}
+		fi
 
-	multijob_init "${opts}"
+		multijob_init "${opts}"
+	fi
+}
+
+# @FUNCTION: _distutils-r1_multijob_finish
+# @INTERNAL
+# @DESCRIPTION:
+# Finish multijob if used.
+_distutils-r1_multijob_finish() {
+	debug-print-function ${FUNCNAME} "${@}"
+
+	if [[ ! ${DISTUTILS_NO_PARALLEL_BUILD} && ! ${DISTUTILS_SINGLE_IMPL} ]]
+	then
+		multijob_finish
+	fi
+}
+
+# @FUNCTION: _distutils-r1_run_foreach_impl
+# @INTERNAL
+# @DESCRIPTION:
+# Run the given phase for each implementation if multiple implementations
+# are enabled, once otherwise.
+_distutils-r1_run_foreach_impl() {
+	debug-print-function ${FUNCNAME} "${@}"
+
+	set -- distutils-r1_run_phase "${@}"
+
+	if [[ ! ${DISTUTILS_SINGLE_IMPL} ]]; then
+		python_foreach_impl "${@}"
+	else
+		if [[ ! ${EPYTHON} ]]; then
+			die "EPYTHON unset, python-single-r1_pkg_setup not called?!"
+		fi
+		local BUILD_DIR=${BUILD_DIR:-${S}}
+		BUILD_DIR=${BUILD_DIR%%/}_${EPYTHON}
+
+		"${@}"
+	fi
 }
 
 distutils-r1_src_prepare() {
@@ -490,21 +573,17 @@ distutils-r1_src_prepare() {
 
 	_distutils-r1_multijob_init
 	if declare -f python_prepare >/dev/null; then
-		python_foreach_impl distutils-r1_run_phase python_prepare
-	else
-		python_foreach_impl distutils-r1_run_phase distutils-r1_python_prepare
+		_distutils-r1_run_foreach_impl python_prepare
 	fi
-	multijob_finish
+	_distutils-r1_multijob_finish
 }
 
 distutils-r1_src_configure() {
 	_distutils-r1_multijob_init
 	if declare -f python_configure >/dev/null; then
-		python_foreach_impl distutils-r1_run_phase python_configure
-	else
-		python_foreach_impl distutils-r1_run_phase distutils-r1_python_configure
+		_distutils-r1_run_foreach_impl python_configure
 	fi
-	multijob_finish
+	_distutils-r1_multijob_finish
 
 	if declare -f python_configure_all >/dev/null; then
 		_distutils-r1_run_common_phase python_configure_all
@@ -516,11 +595,11 @@ distutils-r1_src_compile() {
 
 	_distutils-r1_multijob_init
 	if declare -f python_compile >/dev/null; then
-		python_foreach_impl distutils-r1_run_phase python_compile
+		_distutils-r1_run_foreach_impl python_compile
 	else
-		python_foreach_impl distutils-r1_run_phase distutils-r1_python_compile
+		_distutils-r1_run_foreach_impl distutils-r1_python_compile
 	fi
-	multijob_finish
+	_distutils-r1_multijob_finish
 
 	if declare -f python_compile_all >/dev/null; then
 		_distutils-r1_run_common_phase python_compile_all
@@ -532,11 +611,9 @@ distutils-r1_src_test() {
 
 	_distutils-r1_multijob_init
 	if declare -f python_test >/dev/null; then
-		python_foreach_impl distutils-r1_run_phase python_test
-	else
-		python_foreach_impl distutils-r1_run_phase distutils-r1_python_test
+		_distutils-r1_run_foreach_impl python_test
 	fi
-	multijob_finish
+	_distutils-r1_multijob_finish
 
 	if declare -f python_test_all >/dev/null; then
 		_distutils-r1_run_common_phase python_test_all
@@ -548,11 +625,11 @@ distutils-r1_src_install() {
 
 	_distutils-r1_multijob_init
 	if declare -f python_install >/dev/null; then
-		python_foreach_impl distutils-r1_run_phase python_install
+		_distutils-r1_run_foreach_impl python_install
 	else
-		python_foreach_impl distutils-r1_run_phase distutils-r1_python_install
+		_distutils-r1_run_foreach_impl distutils-r1_python_install
 	fi
-	multijob_finish
+	_distutils-r1_multijob_finish
 
 	if declare -f python_install_all >/dev/null; then
 		_distutils-r1_run_common_phase python_install_all
