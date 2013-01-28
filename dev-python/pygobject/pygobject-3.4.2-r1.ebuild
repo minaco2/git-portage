@@ -1,6 +1,6 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-python/pygobject/pygobject-3.4.2-r1.ebuild,v 1.4 2012/12/16 20:57:36 tetromino Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-python/pygobject/pygobject-3.4.2-r1.ebuild,v 1.6 2013/01/28 13:43:15 aballier Exp $
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -22,9 +22,9 @@ REQUIRED_USE="test? ( cairo )"
 COMMON_DEPEND=">=dev-libs/glib-2.31.0:2
 	>=dev-libs/gobject-introspection-1.34.1.1
 	virtual/libffi:=
-	cairo? ( >=dev-python/pycairo-1.10.0 )
-	${PYTHON_DEPS}"
-# TODO: should be >=dev-python/pycairo-1.10.0[${PYTHON_USEDEP}]
+	cairo? ( >=dev-python/pycairo-1.10.0[${PYTHON_USEDEP}] )
+	${PYTHON_DEPS}
+"
 DEPEND="${COMMON_DEPEND}
 	x11-libs/cairo[glib]
 	virtual/pkgconfig
@@ -32,9 +32,11 @@ DEPEND="${COMMON_DEPEND}
 		dev-libs/atk[introspection]
 		media-fonts/font-cursor-misc
 		media-fonts/font-misc-misc
+		virtual/python-unittest2[${PYTHON_USEDEP}]
 		x11-libs/gdk-pixbuf:2[introspection]
 		x11-libs/gtk+:3[introspection]
-		x11-libs/pango[introspection] )"
+		x11-libs/pango[introspection] )
+"
 
 # We now disable introspection support in slot 2 per upstream recommendation
 # (see https://bugzilla.gnome.org/show_bug.cgi?id=642048#c9); however,
@@ -57,6 +59,9 @@ src_prepare() {
 
 	# Do not build tests if unneeded, bug #226345
 	epatch "${FILESDIR}/${PN}-3.4.1.1-make_check.patch"
+
+	# Run tests with older python too
+	epatch "${FILESDIR}/${PN}-3.4.2-run-tests-with-old-python.patch"
 
 	eautoreconf
 	gnome2_src_prepare
