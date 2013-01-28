@@ -1,5 +1,24 @@
 # ChangeLog for sys-libs/glibc
-# $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/ChangeLog,v 1.916 2013/01/08 12:16:21 vapier Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/ChangeLog,v 1.921 2013/01/28 19:53:58 vapier Exp $
+
+  28 Jan 2013; Mike Frysinger <vapier@gentoo.org>
+  files/eblits/src_compile.eblit:
+  Also set libc_cv_{sparc,powerpc}_tls as newer versions use that.
+
+  25 Jan 2013; Mike Frysinger <vapier@gentoo.org>
+  files/eblits/pkg_preinst.eblit:
+  Refactor sanity checks a bit and include gcc in the search path #453760 by
+  William Throwe.
+
+  23 Jan 2013; Mike Frysinger <vapier@gentoo.org> glibc-2.16.0.ebuild,
+  glibc-2.17.ebuild:
+  Add fix from upstream for slow math calls on x86 #431938 by wbrana.
+
+  23 Jan 2013; Mike Frysinger <vapier@gentoo.org> glibc-2.17.ebuild:
+  Push out hppa fixes from upstream #452184 by Guy Martin.
+
+  12 Jan 2013; Raúl Porcel <armin76@gentoo.org> glibc-2.16.0.ebuild:
+  2.16.0 breaks some packages on alpha, 2.17 works fine
 
   08 Jan 2013; Mike Frysinger <vapier@gentoo.org> glibc-2.17.ebuild:
   Add hppa/fpu fix from Guy Martin #450676 by Jeroen Roovers.
