@@ -1,12 +1,13 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-tv/xbmc/xbmc-9999.ebuild,v 1.129 2012/12/29 20:12:18 vapier Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-tv/xbmc/xbmc-9999.ebuild,v 1.134 2013/01/29 17:11:12 scarabeus Exp $
 
 EAPI="4"
 
 # Does not work with py3 here
 # It might work with py:2.5 but I didn't test that
 PYTHON_DEPEND="2:2.6"
+PYTHON_USE_WITH=sqlite
 
 inherit eutils python multiprocessing autotools
 
@@ -54,8 +55,9 @@ COMMON_DEPEND="virtual/glu
 	>=dev-libs/lzo-2.04
 	dev-libs/tinyxml[stl]
 	dev-libs/yajl
-	>=dev-python/pysqlite-2
 	dev-python/simplejson
+	media-fonts/corefonts
+	media-fonts/roboto
 	media-libs/alsa-lib
 	media-libs/flac
 	media-libs/fontconfig
@@ -226,6 +228,25 @@ src_install() {
 
 	domenu tools/Linux/xbmc.desktop
 	newicon tools/Linux/xbmc-48x48.png xbmc.png
+
+	# punt simplejson bundle, we use the system one anyway
+	rm -rf "${ED}"/usr/share/xbmc/addons/script.module.simplejson/lib
+	# Remove fonconfig settings that are used only on MacOSX.
+	# Can't be patched upstream because they just find all files and install
+	# them into same structure like they have in git.
+	rm -rf "${ED}"/usr/share/xbmc/system/players/dvdplayer/etc
+
+	# Replace bundled fonts with system ones
+	# corefonts: arial ; unknown source teletext.ttf
+	rm -rf "${ED}"/usr/share/xbmc/media/Fonts/arial.ttf
+	dosym /usr/share/fonts/corefonts/arial.ttf \
+		/usr/share/xbmc/media/Fonts/arial.ttf
+	# roboto: roboto-bold, roboto-regular ; unknown source: bold-caps
+	rm -rf "${ED}"/usr/share/xbmc/addons/skin.confluence/fonts/Roboto-*
+	dosym /usr/share/fonts/roboto/Roboto-Regular.ttf \
+		/usr/share/xbmc/addons/skin.confluence/fonts/Roboto-Regular.ttf
+	dosym /usr/share/fonts/roboto/Roboto-Bold.ttf \
+		/usr/share/xbmc/addons/skin.confluence/fonts/Roboto-Bold.ttf
 
 	insinto "$(python_get_sitedir)" #309885
 	doins tools/EventClients/lib/python/xbmcclient.py || die
