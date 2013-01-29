@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/base/use.mask,v 1.153 2013/01/02 04:55:15 floppym Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/base/use.mask,v 1.156 2013/01/29 21:15:25 mgorny Exp $
 
 # not ready for primetime
 packagekit
@@ -57,8 +57,12 @@ sse2
 sse3
 sse4
 sse4a
+sse41
 sse5
 ssse3
+avx
+avx128fma
+avx256
 svga
 win32codecs
 real
@@ -315,10 +319,9 @@ fdk
 orc
 
 # Mike Gilbert <floppym@gentoo.org> (02 Jan 2013)
-# PyPy is unkeyworded on most arches.
-python_targets_pypy1_8
+# PyPy is unkeyworded on most arches. If you are running amd64 or x86,
+# please switch to one of the testing 13.0 profiles to get it.
 python_targets_pypy1_9
 python_targets_pypy2_0
-python_single_target_pypy1_8
 python_single_target_pypy1_9
 python_single_target_pypy2_0

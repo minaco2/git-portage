@@ -1,6 +1,32 @@
 # ChangeLog for Gentoo base-profile
 # Copyright 1999-2013 Gentoo Foundation; Distributed under the GPL v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/base/ChangeLog,v 1.491 2013/01/02 20:11:11 mgorny Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/base/ChangeLog,v 1.499 2013/01/29 21:15:25 mgorny Exp $
+
+  29 Jan 2013; Michał Górny <mgorny@gentoo.org> package.use.force, use.mask:
+  Remove pypy1_8 flag mask, the flags were removed.
+
+  25 Jan 2013; Christoph Junghans <ottxor@gentoo.org> use.mask:
+  mask missing amd64/x86 instruction sets
+
+  22 Jan 2013; Sergey Popov <pinkbyte@gentoo.org> package.use.mask:
+  Move mask media-gfx/opencolorio -> media-libs/opencolorio
+
+  20 Jan 2013; Michał Górny <mgorny@gentoo.org> use.mask:
+  Add a note that pypy flags are unmasked in the new profiles.
+
+  19 Jan 2013; Samuli Suominen <ssuominen@gentoo.org> package.use.mask:
+  Mask USE="systemd" for sys-fs/udisks because systemd is not stable yet.
+
+  18 Jan 2013; Samuli Suominen <ssuominen@gentoo.org> package.use.mask:
+  Unmask USE="cman clvm" for current ~arch sys-fs/lvm2 because new enough cman
+  is in Portage now.
+
+  15 Jan 2013; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  unmask libass[harfbuzz] now that it works, bug #452210 by Nikoli
+
+  13 Jan 2013; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  also mask dev-ml/eliom[ocamlduce], bug #446876 by Michael Palimaka
+  (kensington)
 
   02 Jan 2013; Michał Górny <mgorny@gentoo.org> package.use.force:
   Force pypy2.0 on python-exec.
