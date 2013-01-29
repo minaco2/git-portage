@@ -1,6 +1,25 @@
 # ChangeLog for Gentoo/ARM profile directory
 # Copyright 1999-2013 Gentoo Foundation; Distributed under the GPL v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/arch/arm/ChangeLog,v 1.205 2013/01/04 19:30:05 armin76 Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/arm/ChangeLog,v 1.211 2013/01/29 08:45:34 pinkbyte Exp $
+
+  29 Jan 2013; Sergey Popov <pinkbyte@gentoo.org> package.mask,
+  package.use.mask:
+  Masks cleanup, wrt bug #444181
+
+  26 Jan 2013; Christoph Junghans <ottxor@gentoo.org> use.mask:
+  unmasked lapack
+
+  22 Jan 2013; Alexandre Rostovtsev <tetromino@gentoo.org> package.use.mask:
+  Mask colord[extra-print-profiles] until argyllcms is keyworded here.
+
+  20 Jan 2013; Robin H. Johnson <robbat2@gentoo.org> package.use.mask:
+  tcmalloc now available on arm.
+
+  20 Jan 2013; Michał Górny <mgorny@gentoo.org> use.mask:
+  Remove duplicate pypy/jython masks (masked in base profile now).
+
+  18 Jan 2013; Samuli Suominen <ssuominen@gentoo.org> use.mask:
+  Mask USE="cman clvm" because cman and libdlm are not keyworded on this arch.
 
   04 Jan 2013; Raúl Porcel <armin76@gentoo.org> armv6j/make.defaults,
   armv7a/make.defaults:
