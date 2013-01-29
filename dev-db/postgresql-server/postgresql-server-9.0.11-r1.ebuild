@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-db/postgresql-server/postgresql-server-9.0.11.ebuild,v 1.2 2013/01/29 10:09:22 patrick Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-db/postgresql-server/postgresql-server-9.0.11-r1.ebuild,v 1.2 2013/01/29 10:09:22 patrick Exp $
 
 EAPI="4"
 PYTHON_DEPEND="python? 2"
@@ -128,8 +128,6 @@ src_install() {
 	cp "${S}"/doc/src/sgml/man1/{initdb,pg_controldata,pg_ctl,pg_resetxlog,post{gres,master}}.1 \
 		"${ED}"/usr/share/postgresql-${SLOT}/man/man1/ || die
 
-	dodoc README HISTORY doc/{README.*,TODO,bug.template}
-
 	dodir /etc/eselect/postgresql/slots/${SLOT}
 	echo "postgres_ebuilds=\"\${postgres_ebuilds} ${PF}\"" \
 		> "${ED}/etc/eselect/postgresql/slots/${SLOT}/server"
@@ -171,6 +169,17 @@ pkg_postinst() {
 	elog "Then, execute the following command to setup the initial database"
 	elog "environment:"
 	elog "    emerge --config =${CATEGORY}/${PF}"
+}
+
+pkg_prerm() {
+	if [[ -z ${REPLACED_BY_VERSION} ]] ; then
+		ewarn "Have you dumped and/or migrated the ${SLOT} database cluster?"
+		ewarn "\thttp://www.gentoo.org/doc/en/postgres-howto.xml#doc_chap5"
+
+		ebegin "Resuming removal in 10 seconds. Control-C to cancel"
+		sleep 10
+		eend 0
+	fi
 }
 
 pkg_postrm() {
