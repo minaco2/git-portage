@@ -1,6 +1,6 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sci-libs/linux-gpib/linux-gpib-3.2.16-r3.ebuild,v 1.5 2012/12/11 17:56:53 axs Exp $
+# $Header: /var/cvsroot/gentoo-x86/sci-libs/linux-gpib/linux-gpib-3.2.16-r3.ebuild,v 1.8 2013/01/30 18:21:47 ago Exp $
 
 EAPI=4
 PERL_EXPORT_PHASE_FUNCTIONS=no
@@ -16,7 +16,7 @@ SRC_URI="mirror://sourceforge/linux-gpib/${P}.tar.gz
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 x86"
 IUSE="pcmcia static debug guile perl php python tcl doc firmware"
 
 COMMONDEPEND="
@@ -27,7 +27,6 @@ COMMONDEPEND="
 	firmware? ( sys-apps/fxload )"
 RDEPEND="${COMMONDEPEND}"
 DEPEND="${COMMONDEPEND}
-	sys-kernel/module-rebuild
 	virtual/pkgconfig
 	doc? ( app-text/docbook-sgml-utils )
 	perl? ( virtual/perl-ExtUtils-MakeMaker )"
