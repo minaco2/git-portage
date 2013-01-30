@@ -1,10 +1,13 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-db/mysql-workbench/mysql-workbench-5.2.45.ebuild,v 1.1 2013/01/02 19:07:39 graaff Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-db/mysql-workbench/mysql-workbench-5.2.45.ebuild,v 1.4 2013/01/30 18:09:29 ago Exp $
 
 EAPI=5
 GCONF_DEBUG="no"
 PYTHON_DEPEND=2
+
+PYTHON_USE_WITH=sqlite
+PYTHON_USE_WITH_OPT=doc
 
 inherit gnome2 eutils flag-o-matic python autotools
 
@@ -16,7 +19,7 @@ SRC_URI="mirror://mysql/Downloads/MySQLGUITools/${MY_P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~ppc ~x86 ~amd64-linux ~x86-linux"
+KEYWORDS="amd64 ~ppc x86 ~amd64-linux ~x86-linux"
 IUSE="debug doc gnome-keyring nls static-libs"
 
 # Build system bundles an unreleased copy of dev-libs/antlr-c 3.4 so we
@@ -44,7 +47,6 @@ CDEPEND="dev-db/sqlite:3
 	>=x11-libs/cairo-1.5.12[svg]
 	dev-python/pexpect
 	>=dev-python/paramiko-1.7.4
-	doc? ( dev-python/pysqlite:2 )
 	gnome-keyring? ( gnome-base/libgnome-keyring )
 	nls? ( sys-devel/gettext )"
 RDEPEND="${CDEPEND}
