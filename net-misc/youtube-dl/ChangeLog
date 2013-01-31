@@ -1,6 +1,24 @@
 # ChangeLog for net-misc/youtube-dl
 # Copyright 1999-2013 Gentoo Foundation; Distributed under the GPL v2
-# $Header: /var/cvsroot/gentoo-x86/net-misc/youtube-dl/ChangeLog,v 1.135 2013/01/09 15:15:04 jer Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-misc/youtube-dl/ChangeLog,v 1.139 2013/01/31 16:32:20 jer Exp $
+
+*youtube-dl-2013.01.28 (31 Jan 2013)
+
+  31 Jan 2013; Jeroen Roovers <jer@gentoo.org> +youtube-dl-2013.01.28.ebuild:
+  Version bump.
+
+  14 Jan 2013; Tomáš Chvátal <scarabeus@gentoo.org>
+  youtube-dl-2013.01.13.ebuild:
+  Fix shebang for all scripts. Does not work otherwise if system py is 3 series.
+
+  14 Jan 2013; Jeroen Roovers <jer@gentoo.org> youtube-dl-2013.01.13.ebuild:
+  Move patching to src_prepare().
+
+*youtube-dl-2013.01.13 (14 Jan 2013)
+
+  14 Jan 2013; Jeroen Roovers <jer@gentoo.org> +youtube-dl-2013.01.13.ebuild,
+  +files/youtube-dl-2013.01.13-offensive.patch:
+  Version bump.
 
   09 Jan 2013; Jeroen Roovers <jer@gentoo.org> youtube-dl-2013.01.08.ebuild:
   Install CHANGELOG.
