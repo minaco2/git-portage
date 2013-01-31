@@ -1,11 +1,10 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-analyzer/nmap/nmap-6.25.ebuild,v 1.5 2012/12/03 19:52:32 jer Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-analyzer/nmap/nmap-6.25.ebuild,v 1.15 2013/01/31 02:38:48 jer Exp $
 
 EAPI="4"
-PYTHON_DEPEND="2"
 
-inherit eutils flag-o-matic python
+inherit eutils flag-o-matic python toolchain-funcs
 
 MY_P=${P/_beta/BETA}
 
@@ -57,7 +56,9 @@ DEPEND="
 S="${WORKDIR}/${MY_P}"
 
 pkg_setup() {
-	python_set_active_version 2
+	if use gtk || use ndiff; then
+		python_set_active_version 2
+	fi
 }
 
 src_unpack() {
@@ -66,12 +67,12 @@ src_unpack() {
 
 src_prepare() {
 	epatch \
-		"${FILESDIR}"/${PN}-4.75-include.patch \
 		"${FILESDIR}"/${PN}-4.75-nolua.patch \
 		"${FILESDIR}"/${PN}-5.10_beta1-string.patch \
 		"${FILESDIR}"/${PN}-5.21-python.patch \
 		"${FILESDIR}"/${PN}-6.01-make.patch \
-		"${FILESDIR}"/${PN}-6.25-lua.patch
+		"${FILESDIR}"/${PN}-6.25-lua.patch \
+		"${FILESDIR}"/${PN}-6.25-liblua-ar.patch
 	sed -i \
 		-e 's/-m 755 -s ncat/-m 755 ncat/' \
 		ncat/Makefile.in || die
@@ -103,21 +104,29 @@ src_prepare() {
 		-e 's|^Categories=.*|Categories=Network;System;Security;|g' \
 		zenmap/install_scripts/unix/zenmap-root.desktop \
 		zenmap/install_scripts/unix/zenmap.desktop || die
+
 }
 
 src_configure() {
 	# The bundled libdnet is incompatible with the version available in the
 	# tree, so we cannot use the system library here.
 	econf \
+		$(use_enable ipv6) \
+		$(use_enable nls) \
 		$(use_with gtk zenmap) \
 		$(use_with lua liblua) \
 		$(use_with ncat) \
 		$(use_with ndiff) \
-		$(use_enable nls) \
 		$(use_with nmap-update) \
 		$(use_with nping) \
 		$(use_with ssl openssl) \
 		--with-libdnet=included
+}
+
+src_compile() {
+	emake \
+		AR=$(tc-getAR) \
+		RANLIB=$(tc-getRANLIB )
 }
 
 src_install() {

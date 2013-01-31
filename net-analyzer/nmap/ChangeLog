@@ -1,6 +1,48 @@
 # ChangeLog for net-analyzer/nmap
 # Copyright 1999-2013 Gentoo Foundation; Distributed under the GPL v2
-# $Header: /var/cvsroot/gentoo-x86/net-analyzer/nmap/ChangeLog,v 1.276 2013/01/11 16:49:50 jer Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-analyzer/nmap/ChangeLog,v 1.286 2013/01/31 02:38:48 jer Exp $
+
+  31 Jan 2013; Jeroen Roovers <jer@gentoo.org> nmap-6.25.ebuild:
+  Fix libpcap USE dep by Rick Farina.
+
+  31 Jan 2013; Jeroen Roovers <jer@gentoo.org> nmap-6.25.ebuild:
+  Bring back USE=ipv6.
+
+  26 Jan 2013; Jeroen Roovers <jer@gentoo.org> nmap-6.01.ebuild,
+  nmap-6.25.ebuild:
+  Run python_set_active_version conditionally.
+
+  26 Jan 2013; Jeroen Roovers <jer@gentoo.org> nmap-6.01.ebuild,
+  nmap-6.25.ebuild:
+  Drop PYTHON_DEPEND and -4.75-include.patch by Alexander Zubkov (bug #435462).
+
+  18 Jan 2013; Lars Wendler <polynomial-c@gentoo.org> nmap-6.01.ebuild,
+  nmap-6.25.ebuild:
+  non-maintaienr commit: Removed ipv6 dependency now that a proper fix went
+  into libpcap (bug #452832).
+
+  16 Jan 2013; Jeroen Roovers <jer@gentoo.org> nmap-6.25.ebuild,
+  +files/nmap-6.25-liblua-ar.patch:
+  Fix AR/RANLIB again (bug #445524).
+
+  16 Jan 2013; Jeroen Roovers <jer@gentoo.org> nmap-6.01.ebuild:
+  Fix AR/RANLIB again (bug #445524).
+
+  16 Jan 2013; Sergey Popov <pinkbyte@gentoo.org> nmap-6.01.ebuild,
+  nmap-6.25.ebuild:
+  Fix building with USE='lua' due to recent changes, wrt bug #452452. Thanks to
+  Marien Zwart
+
+  16 Jan 2013; Sergey Popov <pinkbyte@gentoo.org> nmap-6.01.ebuild,
+  nmap-6.25.ebuild:
+  Respect AR and RANLIB, wrt bug #445524. Thanks to Agostino Sarubbo for
+  discovering this issue
+
+  15 Jan 2013; Jeroen Roovers <jer@gentoo.org> -files/nmap-5.00-python.patch,
+  -files/nmap-5.20-nolua.patch, -files/nmap-5.21-openssl-1.patch,
+  -nmap-5.51.ebuild, -nmap-5.51.6.ebuild, -nmap-6.00.ebuild, nmap-6.01.ebuild,
+  nmap-6.25.ebuild, -files/nmap-logo-64.png:
+  Go back to depend on net-libs/libpcap[ipv6] (bug #451162).
 
   11 Jan 2013; Jeroen Roovers <jer@gentoo.org> metadata.xml:
   Remove spock (bug #35242).
