@@ -1,6 +1,20 @@
 # ChangeLog for net-libs/cyassl
-# Copyright 1999-2012 Gentoo Foundation; Distributed under the GPL v2
-# $Header: /var/cvsroot/gentoo-x86/net-libs/cyassl/ChangeLog,v 1.19 2012/12/28 01:55:02 blueness Exp $
+# Copyright 1999-2013 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/net-libs/cyassl/ChangeLog,v 1.23 2013/01/31 18:42:22 ago Exp $
+
+  31 Jan 2013; Agostino Sarubbo <ago@gentoo.org> cyassl-2.4.6.ebuild:
+  Stable for x86, wrt bug #448980
+
+  31 Jan 2013; Agostino Sarubbo <ago@gentoo.org> cyassl-2.4.6.ebuild:
+  Stable for amd64, wrt bug #448980
+
+  31 Jan 2013; Anthony G. Basile <blueness@gentoo.org>
+  +files/cyassl-2.4.6-fix-disable-debug.patch,
+  +files/cyassl-2.4.6-respect-CFLAGS.patch, cyassl-2.4.6.ebuild:
+  Fix bug #454300
+
+  30 Jan 2013; Jeroen Roovers <jer@gentoo.org> cyassl-2.4.6.ebuild:
+  Stable for HPPA (bug #448980).
 
 *cyassl-2.4.6 (28 Dec 2012)
 
