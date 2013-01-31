@@ -1,6 +1,187 @@
 # ChangeLog for eclass directory
 # Copyright 1999-2013 Gentoo Foundation; Distributed under the GPL v2
-# $Header: /var/cvsroot/gentoo-x86/eclass/ChangeLog,v 1.608 2013/01/11 08:31:49 jlec Exp $
+# $Header: /var/cvsroot/gentoo-x86/eclass/ChangeLog,v 1.657 2013/01/31 19:59:54 eva Exp $
+
+  31 Jan 2013; Gilles Dartiguelongue <eva@gentoo.org> gst-plugins10.eclass:
+  Allow build of multiple plugins in different directories. Make variables more
+  easily override-able.
+
+  31 Jan 2013; Chí-Thanh Christopher Nguyễn <chithanh@gentoo.org>
+  xorg-2.eclass:
+  Add EAPI 5 sub-slot dependency on x11-base/xorg-server for packages which
+  require rebuilding when the server is upgraded.
+
+  31 Jan 2013; Tomáš Chvátal <scarabeus@gentoo.org> obs-service.eclass:
+  Additional files also must be versioned as they change between versions.
+
+  30 Jan 2013; Michał Górny <mgorny@gentoo.org> python-r1.eclass,
+  python-single-r1.eclass:
+  Use (-) USE-defaults to reduce issues from removing flags.
+
+  29 Jan 2013; Michał Górny <mgorny@gentoo.org> python-utils-r1.eclass:
+  Disable pypy1.8 globally.
+
+  27 Jan 2013; Tim Harder <radhermit@gentoo.org> vim-plugin.eclass:
+  Remove all hidden files in the main tarball dir.
+
+  27 Jan 2013; Michał Górny <mgorny@gentoo.org> python-r1.eclass:
+  Fix output redirections in run_in_build_dir().
+
+  27 Jan 2013; Michał Górny <mgorny@gentoo.org> distutils-r1.eclass:
+  Support using distutils-r1 along with python-single-r1.
+
+  27 Jan 2013; Michał Górny <mgorny@gentoo.org> distutils-r1.eclass:
+  Support making dependency and phase function enforcement optional.
+
+  27 Jan 2013; Michał Górny <mgorny@gentoo.org> python-r1.eclass:
+  Introduce run_in_build_dir() function as used by GNOME ebuilds.
+
+  27 Jan 2013; Michał Górny <mgorny@gentoo.org> python-utils-r1.eclass:
+  Introduce python_doheader(), to install headers specific to a Python
+  implementation.
+
+  27 Jan 2013; Joerg Bornkessel <hd_brummy@gentoo.org> vdr-plugin-2.eclass:
+  reverted last changes
+
+  27 Jan 2013; Tim Harder <radhermit@gentoo.org> vim-plugin.eclass:
+  Remove files before installing docs.
+
+  27 Jan 2013; Tim Harder <radhermit@gentoo.org> vim-plugin.eclass:
+  Also remove stray makefiles.
+
+  27 Jan 2013; Tim Harder <radhermit@gentoo.org> vim-plugin.eclass:
+  Remove unwanted files that may exist.
+
+  27 Jan 2013; Joerg Bornkessel <hd_brummy@gentoo.org> vdr-plugin-2.eclass:
+  some fixes, install new makefilehandling; thx to zoolock@irc gentoo.vdr
+
+  26 Jan 2013; Sven Vermeulen <swift@gentoo.org> selinux-policy-2.eclass:
+  Supporting removal of SELinux modules
+
+  26 Jan 2013; Michał Górny <mgorny@gentoo.org> autotools-multilib.eclass:
+  Set USE defaults to make sure IUSE_IMPLICIT does not fool us.
+
+  26 Jan 2013; Michał Górny <mgorny@gentoo.org> autotools-multilib.eclass:
+  Require EAPI=5 to make sure everything works predictably.
+
+  26 Jan 2013; Michał Górny <mgorny@gentoo.org> autotools-multilib.eclass:
+  Support running commands in parallel and use it to run configure scripts.
+
+  26 Jan 2013; Michał Górny <mgorny@gentoo.org> autotools-multilib.eclass:
+  Introduce MULTILIB_USEDEP to enforce correct dependencies.
+
+  25 Jan 2013; Michael Haubenwallner <haubi@gentoo.org>
+  +ELT-patches/aixrtl/1.5.0-cmds-c, +ELT-patches/aixrtl/1.5.0-cmds-cxx,
+  +ELT-patches/aixrtl/1.5.0-expsym-c, +ELT-patches/aixrtl/1.5.0-expsym-cxx,
+  +ELT-patches/aixrtl/1.5.0-noundef-c, +ELT-patches/aixrtl/1.5.0-noundef-cxx,
+  +ELT-patches/aixrtl/1.5.0-soname, +ELT-patches/aixrtl/1.5.0-usertl-c,
+  +ELT-patches/aixrtl/1.5.0-usertl-cxx, +ELT-patches/aixrtl/2.2.0-cmds-c,
+  +ELT-patches/aixrtl/2.2.0-cmds-cxx, +ELT-patches/aixrtl/2.2.0-expsym-c,
+  +ELT-patches/aixrtl/2.2.0-expsym-cxx, +ELT-patches/aixrtl/2.2.0-noundef-c,
+  +ELT-patches/aixrtl/2.2.0-noundef-cxx, +ELT-patches/aixrtl/2.2.0-usertl-cxx,
+  +ELT-patches/aixrtl/2.4.0-expsym-c, +ELT-patches/aixrtl/2.4.0-expsym-cxx,
+  -ELT-patches/aixrtl/1.4d-cmds-c, -ELT-patches/aixrtl/1.4d-cmds-cxx,
+  -ELT-patches/aixrtl/1.4d-sonamespec, -ELT-patches/aixrtl/1.4d-use-rtl-c,
+  -ELT-patches/aixrtl/1.4d-use-rtl-cxx, -ELT-patches/aixrtl/1.5-sonamespec,
+  -ELT-patches/aixrtl/2.1b-cmds-c, -ELT-patches/aixrtl/2.1b-cmds-cxx,
+  -ELT-patches/aixrtl/2.1b-use-rtl-cxx, ELT-patches/aixrtl/1.5.22-cmds-c,
+  ELT-patches/aixrtl/1.5.22-cmds-cxx, ELT-patches/aixrtl/2.2.8-cmds-c,
+  ELT-patches/aixrtl/2.2.8-cmds-cxx:
+  Recreate from scratch: Drop need for ld-wrapper with --soname support, is
+  unavailable during bootstrap. Ignore libtool before 1.5.0.
+
+  24 Jan 2013; Pacho Ramos <pacho@gentoo.org> readme.gentoo.eclass:
+  Include FORCE_PRINT_ELOG variable to for printing of messages when desired.
+  Thanks to Tomáš Chvátal for his suggestions.
+
+  24 Jan 2013; Tim Harder <radhermit@gentoo.org> vim-plugin.eclass:
+  Only display vim plugin help elog messages for new installs.
+
+  23 Jan 2013; Justin Lecher <jlec@gentoo.org> intel-sdp.eclass:
+  Add dummy dir to avoid sandbox violations when emerging with
+  FEATURES=-userpriv, #437512
+
+  23 Jan 2013; Justin Lecher <jlec@gentoo.org> intel-sdp.eclass:
+  Add support for license server, #447262
+
+  21 Jan 2013; Michał Górny <mgorny@gentoo.org> python-any-r1.eclass,
+  python-r1.eclass, python-single-r1.eclass, python-utils-r1.eclass:
+  Check PYTHON_COMPAT for validity, and support disabling implementations in
+  the eclass.
+
+  21 Jan 2013; Michał Górny <mgorny@gentoo.org> multilib.eclass:
+  Set PKG_CONFIG_{LIBDIR,PATH} for multilib builds. Approved by vapier in bug
+  #453206.
+
+  20 Jan 2013; Michał Górny <mgorny@gentoo.org> autotools-multilib.eclass:
+  Enable EAPI=5.
+
+  20 Jan 2013; Michał Górny <mgorny@gentoo.org> distutils-r1.eclass:
+  Do not redirect stderr of pushd&popd. Thanks to vapier for catching that.
+
+  20 Jan 2013; Pacho Ramos <pacho@gentoo.org> +readme.gentoo.eclass:
+  Finally commit readme.gentoo.eclass to create a README.gentoo doc file
+  recording tips shown via elog messages first time the package is merged.
+
+  18 Jan 2013; Justin Lecher <jlec@gentoo.org> intel-sdp.eclass:
+  No EPREFIX with helper functions
+
+  16 Jan 2013; Jory A. Pratt <anarchy@gentoo.org> mozconfig-3.eclass:
+  Remove webrtc block as it is supported on all archs now.
+
+  16 Jan 2013; Gilles Dartiguelongue <eva@gentoo.org> gnome2.eclass:
+  Drop deprecated SCROLLKEEPER_UPDATE and switch to in_iuse.
+
+  16 Jan 2013; Gilles Dartiguelongue <eva@gentoo.org> gnome2.eclass,
+  gst-plugins10.eclass:
+  Update eclass documentation to be correclty parsed, bug #452204.
+
+  16 Jan 2013; Ralph Sennhauser <sera@gentoo.org> java-utils-2.eclass:
+  Be graceful if no system vm is set if trying to determine build vm from
+  handle.
+
+  16 Jan 2013; Michał Górny <mgorny@gentoo.org> mozcoreconf-2.eclass:
+  Migrate Mozilla packages to python-any-r1 for build-time Python dep.
+
+  16 Jan 2013; Jory A. Pratt <anarchy@gentoo.org> mozcoreconf-2.eclass:
+  Fix sqlite dep so pysqlite can go away.
+
+  16 Jan 2013; Zac Medico <zmedico@gentoo.org> linux-info.eclass:
+  Fix localRESULT typo in linux_chkconfig_builtin.
+
+  15 Jan 2013; Jeroen Roovers <jer@gentoo.org> ChangeLog:
+  DECRIPTION -> DESCRIPTION (bug #451654 by Christopher Schwan).
+
+  15 Jan 2013; Justin Lecher <jlec@gentoo.org> git.eclass:
+  @THANKS is no keywords
+
+  15 Jan 2013; Justin Lecher <jlec@gentoo.org> distutils-r1.eclass:
+  Fix typo
+
+  15 Jan 2013; Ryan Hill <dirtyepic@gentoo.org> toolchain.eclass:
+  Drop go support for 4.6 - broken by newer glibc versions and upstream
+  recommends it not be used.
+
+  13 Jan 2013; Gilles Dartiguelongue <eva@gentoo.org> gnome2.eclass:
+  Allow ebuild override of eclass generated econf.
+
+  12 Jan 2013; Michał Górny <mgorny@gentoo.org> distutils-r1.eclass:
+  Provide best implementation's build dir in python_*_all() as BUILD_DIR to
+  make use of esetup.py easier.
+
+  12 Jan 2013; Michał Górny <mgorny@gentoo.org> distutils-r1.eclass:
+  Pass arguments to setup.py in an predictable order, especially do not prepend
+  commands before user options.
+
+  12 Jan 2013; Michał Górny <mgorny@gentoo.org> distutils-r1.eclass:
+  Support specifying directories in DOCS.
+
+  12 Jan 2013; Michał Górny <mgorny@gentoo.org> distutils-r1.eclass:
+  Do not call dummy phases unnecessarily.
+
+  12 Jan 2013; Justin Lecher <jlec@gentoo.org> flag-o-matic.eclass:
+  Don't check for twice, but check for redirect support, #445244; thanks Andrey
+  Hippo for the patch
 
   11 Jan 2013; Justin Lecher <jlec@gentoo.org> +cuda.eclass:
   Add new eclass
