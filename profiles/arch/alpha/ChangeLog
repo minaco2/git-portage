@@ -1,6 +1,24 @@
 # ChangeLog for Gentoo/Alpha profile directory
 # Copyright 1999-2013 Gentoo Foundation; Distributed under the GPL v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/arch/alpha/ChangeLog,v 1.161 2013/01/01 14:26:45 ago Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/alpha/ChangeLog,v 1.167 2013/01/31 05:57:08 tetromino Exp $
+
+  31 Jan 2013; Alexandre Rostovtsev <tetromino@gentoo.org> package.use.mask:
+  Mask net-misc/modemmanager[qmi,qmi-newest] until libqmi is keyworded.
+
+  22 Jan 2013; Alexandre Rostovtsev <tetromino@gentoo.org> package.use.mask:
+  Mask colord[extra-print-profiles] until argyllcms is keyworded here.
+
+  20 Jan 2013; Agostino Sarubbo <ago@gentoo.org> use.mask:
+  remove mask on colord/packagekit use
+
+  20 Jan 2013; Agostino Sarubbo <ago@gentoo.org> use.mask:
+  mask template_haskell IUSE as per slyfox suggest
+
+  20 Jan 2013; Michał Górny <mgorny@gentoo.org> use.mask:
+  Remove duplicate pypy/jython masks (masked in base profile now).
+
+  18 Jan 2013; Samuli Suominen <ssuominen@gentoo.org> use.mask:
+  Mask USE="cman clvm" because cman and libdlm are not keyworded on this arch.
 
   01 Jan 2013; Agostino Sarubbo <ago@gentoo.org> package.use.mask, use.mask:
   Remove dev-libs/folks eds telepathy and gnome-base/nautilus sendto from
