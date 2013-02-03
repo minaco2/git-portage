@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-session/gnome-session-3.6.2-r1.ebuild,v 1.2 2013/02/03 00:39:14 tetromino Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-session/gnome-session-3.6.2-r2.ebuild,v 1.1 2013/02/03 00:39:14 tetromino Exp $
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -97,7 +97,7 @@ src_install() {
 
 	dodir /usr/share/gnome/applications/
 	insinto /usr/share/gnome/applications/
-	doins "${FILESDIR}/defaults.list"
+	newins "${FILESDIR}/defaults.list-r1" defaults.list
 
 	dodir /etc/X11/xinit/xinitrc.d/
 	exeinto /etc/X11/xinit/xinitrc.d/
