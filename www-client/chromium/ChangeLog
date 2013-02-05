@@ -1,6 +1,73 @@
 # ChangeLog for www-client/chromium
 # Copyright 1999-2013 Gentoo Foundation; Distributed under the GPL v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/ChangeLog,v 1.789 2013/01/11 12:20:50 ago Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/ChangeLog,v 1.802 2013/02/05 10:31:43 phajdan.jr Exp $
+
+*chromium-26.0.1403.0 (05 Feb 2013)
+
+  05 Feb 2013; Pawel Hajdan jr <phajdan.jr@gentoo.org>
+  +files/chromium-gpsd-r0.patch, +files/chromium-system-v8-r0.patch,
+  +chromium-26.0.1403.0.ebuild, chromium-9999-r1.ebuild:
+  Dev channel bump. Back to bundled libvpx and bigger tarball. Use system mesa
+  and re2. Add optional support for libgps. Remove old.
+
+*chromium-25.0.1364.58 (31 Jan 2013)
+
+  31 Jan 2013; Mike Gilbert <floppym@gentoo.org> +chromium-25.0.1364.58.ebuild,
+  -chromium-25.0.1364.29.ebuild:
+  Beta channel bump.
+
+  26 Jan 2013; Pawel Hajdan jr <phajdan.jr@gentoo.org>
+  chromium-26.0.1386.0.ebuild, chromium-9999-r1.ebuild:
+  Always enable support for proprietary codecs.
+
+*chromium-25.0.1364.45 (24 Jan 2013)
+
+  24 Jan 2013; Mike Gilbert <floppym@gentoo.org> +chromium-25.0.1364.45.ebuild,
+  -chromium-25.0.1364.26.ebuild:
+  Beta channel bump.
+
+  23 Jan 2013; Tomáš Chvátal <scarabeus@gentoo.org> chromium-9999-r1.ebuild:
+  Add sublsots from icu to live ebuild.
+
+  23 Jan 2013; Agostino Sarubbo <ago@gentoo.org> chromium-24.0.1312.56.ebuild:
+  Stable for x86, wrt bug #453610
+
+  23 Jan 2013; Agostino Sarubbo <ago@gentoo.org> chromium-24.0.1312.56.ebuild:
+  Stable for amd64, wrt bug #453610
+
+*chromium-24.0.1312.56 (23 Jan 2013)
+
+  23 Jan 2013; Mike Gilbert <floppym@gentoo.org> +chromium-24.0.1312.56.ebuild:
+  Stable channel bump.
+
+*chromium-26.0.1386.0 (20 Jan 2013)
+
+  20 Jan 2013; Pawel Hajdan jr <phajdan.jr@gentoo.org>
+  +files/chromium-system-nspr-r0.patch, +chromium-26.0.1386.0.ebuild,
+  chromium-9999-r1.ebuild:
+  Dev channel bump.
+
+  17 Jan 2013; Pawel Hajdan jr <phajdan.jr@gentoo.org>
+  +files/chromium-system-ffmpeg-r1.patch, chromium-26.0.1384.2.ebuild,
+  chromium-9999-r1.ebuild:
+  Do not needlessly tar nacl toolchain. More system ffmpeg compatibility.
+  Remove more bundled libraries.
+
+*chromium-26.0.1384.2 (16 Jan 2013)
+
+  16 Jan 2013; Pawel Hajdan jr <phajdan.jr@gentoo.org>
+  +chromium-26.0.1384.2.ebuild, chromium-9999-r1.ebuild:
+  Dev channel bump.
+
+*chromium-25.0.1364.29 (15 Jan 2013)
+
+  15 Jan 2013; Pawel Hajdan jr <phajdan.jr@gentoo.org>
+  -chromium-25.0.1364.5.ebuild, +chromium-25.0.1364.29.ebuild:
+  Dev channel bump. Remove old.
+
+  14 Jan 2013; Pawel Hajdan jr <phajdan.jr@gentoo.org>
+  +files/chromium-icu50-tests-r0.patch, chromium-25.0.1364.26.ebuild:
+  Fix tests with icu-50, bug #444886 by floppym.
 
   11 Jan 2013; Agostino Sarubbo <ago@gentoo.org> -chromium-23.0.1271.97.ebuild,
   -chromium-24.0.1312.45.ebuild, -chromium-24.0.1312.49.ebuild:
