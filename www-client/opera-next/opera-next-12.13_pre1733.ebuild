@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/opera/opera-12.13_p1734.ebuild,v 1.5 2013/02/06 18:37:52 jer Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/opera-next/opera-next-12.13_pre1733.ebuild,v 1.3 2013/02/06 18:37:25 jer Exp $
 
 EAPI=4
 inherit eutils fdo-mime gnome2-utils multilib pax-utils versionator
@@ -10,7 +10,7 @@ HOMEPAGE="http://www.opera.com/"
 
 SLOT="0"
 LICENSE="OPERA-12 LGPL-2 LGPL-3"
-KEYWORDS="amd64 x86 ~x86-fbsd"
+KEYWORDS="~amd64 ~x86 ~x86-fbsd"
 IUSE="elibc_FreeBSD gtk kde +gstreamer multilib"
 
 O_V="$(get_version_component_range 1-2)" # Version, i.e. 11.00
@@ -19,7 +19,7 @@ O_B="$(get_version_component_range 3)"   # Build number, i.e. 1156
 # == Variables that often change ==
 # All other variables should be accounted for by _pre/_p
 
-O_K="b00k" # The key to the snapshot URL
+O_K="fac3" # The key to the snapshot URL
 
 O_LINGUAS="
 	af ar az be bg bn cs da de el en-GB es-ES es-LA et fa fi fr fr-CA fy gd he
