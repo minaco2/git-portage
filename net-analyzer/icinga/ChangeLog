@@ -1,6 +1,29 @@
 # ChangeLog for net-analyzer/icinga
 # Copyright 1999-2013 Gentoo Foundation; Distributed under the GPL v2
-# $Header: /var/cvsroot/gentoo-x86/net-analyzer/icinga/ChangeLog,v 1.33 2013/01/03 01:00:57 prometheanfire Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-analyzer/icinga/ChangeLog,v 1.37 2013/02/09 21:41:59 prometheanfire Exp $
+
+*icinga-1.8.4-r1 (09 Feb 2013)
+
+  09 Feb 2013; Matthew Thode <prometheanfire@gentoo.org>
+  +icinga-1.8.4-r1.ebuild:
+  updating to r1 for bug 456040
+
+*icinga-1.8.4 (14 Jan 2013)
+
+  14 Jan 2013; Matthew Thode <prometheanfire@gentoo.org> +icinga-1.8.4.ebuild:
+  update for CVE-2012-6096 https://dev.icinga.org/issues/3532
+
+*icinga-1.8.3-r1 (14 Jan 2013)
+
+  14 Jan 2013; Matthew Thode <prometheanfire@gentoo.org>
+  +icinga-1.8.3-r1.ebuild:
+  fixing keepdirs /var/run/icinga for bug 449392
+
+*icinga-1.8.3 (11 Jan 2013)
+
+  11 Jan 2013; Matthew Thode <prometheanfire@gentoo.org> +icinga-1.8.3.ebuild,
+  -icinga-1.7.2.ebuild, -icinga-1.8.0.ebuild:
+  just updating icinga and pruning the old stuff
 
   03 Jan 2013; Matthew Thode <prometheanfire@gentoo.org>
   files/icinga-apache.conf:
