@@ -1,8 +1,8 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-haskell/haddock/haddock-2.10.0-r2.ebuild,v 1.2 2013/02/10 14:23:03 slyfox Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-haskell/haddock/haddock-2.13.1-r2.ebuild,v 1.1 2013/02/10 14:23:03 slyfox Exp $
 
-EAPI="4"
+EAPI=5
 
 CABAL_FEATURES="bin lib profile haddock hscolour nocabaldep"
 inherit eutils haskell-cabal pax-utils
@@ -12,15 +12,15 @@ HOMEPAGE="http://www.haskell.org/haddock/"
 SRC_URI="mirror://hackage/packages/archive/${PN}/${PV}/${P}.tar.gz"
 
 LICENSE="BSD"
-SLOT="0"
+SLOT="0/${PV}"
 # ia64 lost as we don't have ghc-7 there yet
 # ppc64 needs to be rekeyworded due to xhtml not being keyworded
-KEYWORDS="~alpha ~amd64 -ia64 ~ppc ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-macos ~x86-solaris"
+KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-RDEPEND="dev-haskell/ghc-paths[profile?]
-		=dev-haskell/xhtml-3000.2*[profile?]
-		>=dev-lang/ghc-7.4 <dev-lang/ghc-7.6"
+RDEPEND="dev-haskell/ghc-paths:=[profile?]
+		=dev-haskell/xhtml-3000.2*:=[profile?]
+		>=dev-lang/ghc-7.6.1:="
 DEPEND="${RDEPEND}
 		>=dev-haskell/cabal-1.14"
 
@@ -30,17 +30,9 @@ CABAL_EXTRA_BUILD_FLAGS="--ghc-options=-rtsopts"
 
 src_prepare() {
 	# we would like to avoid happy and alex depends
-	epatch "${FILESDIR}"/${P}-drop-tools.patch
-	# http://www.mail-archive.com/cvs-ghc@haskell.org/msg37186.html
-	epatch "${FILESDIR}"/${P}-dont-crash-on-unicode-strings-in-doc-comments.patch
-	# http://trac.haskell.org/haddock/ticket/202 fixed by upstream in ghc-7.4
-	# branch only (fix is not in master branch on 20120626)
-	epatch "${FILESDIR}/${P}-ticket-202.patch"
-
-	for f in Lex Parse; do
-		rm "src/Haddock/$f."*
-		mv "dist/build/haddock/haddock-tmp/Haddock/$f.hs" src/Haddock/
-	done
+	epatch "${FILESDIR}"/${PN}-2.13.1-drop-tools.patch
+	# Fix: Ticket #213 Haddock fails when advanced typesystem features are used
+	epatch "${FILESDIR}"/${PN}-2.13.1-renameType.patch
 }
 
 src_configure() {
