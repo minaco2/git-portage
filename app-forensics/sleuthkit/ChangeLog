@@ -1,6 +1,18 @@
 # ChangeLog for app-forensics/sleuthkit
 # Copyright 1999-2013 Gentoo Foundation; Distributed under the GPL v2
-# $Header: /var/cvsroot/gentoo-x86/app-forensics/sleuthkit/ChangeLog,v 1.73 2013/01/04 12:50:52 ago Exp $
+# $Header: /var/cvsroot/gentoo-x86/app-forensics/sleuthkit/ChangeLog,v 1.76 2013/02/10 20:54:55 radhermit Exp $
+
+*sleuthkit-4.0.2 (10 Feb 2013)
+
+  10 Feb 2013; Tim Harder <radhermit@gentoo.org> +sleuthkit-4.0.2.ebuild:
+  Version bump. Add subslot and migrate to autotools-utils.
+
+  27 Jan 2013; Tim Harder <radhermit@gentoo.org> -sleuthkit-3.2.3.ebuild,
+  -files/sleuthkit-3.2.3-system-sqlite.patch, -sleuthkit-4.0.0.ebuild:
+  Remove old.
+
+  13 Jan 2013; Agostino Sarubbo <ago@gentoo.org> sleuthkit-4.0.1.ebuild:
+  Stable for x86, wrt bug #449920
 
   04 Jan 2013; Agostino Sarubbo <ago@gentoo.org> sleuthkit-4.0.1.ebuild:
   Stable for ppc, wrt bug #449920
