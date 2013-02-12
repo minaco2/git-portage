@@ -1,13 +1,13 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-libs/harfbuzz/harfbuzz-0.9.11.ebuild,v 1.5 2013/02/12 03:18:45 tetromino Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-libs/harfbuzz/harfbuzz-0.9.12.ebuild,v 1.1 2013/02/12 03:18:45 tetromino Exp $
 
 EAPI=5
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/harfbuzz"
 [[ ${PV} == 9999 ]] && inherit git-2 autotools
 
-inherit eutils libtool
+inherit autotools eutils libtool
 
 DESCRIPTION="An OpenType text shaping engine"
 HOMEPAGE="http://www.freedesktop.org/wiki/Software/HarfBuzz"
@@ -42,8 +42,12 @@ src_prepare() {
 			-e '/libharfbuzz_la_LINK = /s/\<LINK\>/CXXLINK/' \
 			src/Makefile.in || die
 	fi
-	[[ ${PV} == 9999 ]] && eautoreconf
-	elibtoolize  # for building a shared library on x64-solaris
+#	[[ ${PV} == 9999 ]] && eautoreconf
+#	elibtoolize  # for building a shared library on x64-solaris
+
+	# parallel make failure, fixed in 0.9.13, needs eautoreconf; bug #450920
+	epatch "${FILESDIR}/${P}-hb-version.h.patch"
+	eautoreconf
 }
 
 src_configure() {
