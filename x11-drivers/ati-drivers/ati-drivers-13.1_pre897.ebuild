@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-drivers/ati-drivers/ati-drivers-13.1.ebuild,v 1.2 2013/02/18 21:08:54 chithanh Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-drivers/ati-drivers/ati-drivers-13.1_pre897.ebuild,v 1.1 2013/02/18 21:08:54 chithanh Exp $
 
 EAPI=5
 
@@ -10,7 +10,7 @@ DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and ne
 HOMEPAGE="http://www.amd.com"
 MY_V=( $(get_version_components) )
 #RUN="${WORKDIR}/amd-driver-installer-9.00-x86.x86_64.run"
-SLOT="1"
+SLOT="legacy"
 if [[ legacy != ${SLOT} ]]; then
 	DRIVERS_URI="http://www2.ati.com/drivers/linux/amd-driver-installer-catalyst-${PV}-linux-x86.x86_64.zip"
 else
@@ -27,7 +27,7 @@ KEYWORDS="-* ~amd64 ~x86"
 RESTRICT="bindist test"
 
 RDEPEND="
-	<=x11-base/xorg-server-1.13.49[-minimal]
+	<=x11-base/xorg-server-1.12.49[-minimal]
 	>=app-admin/eselect-opengl-1.0.7
 	app-admin/eselect-opencl
 	sys-power/acpid
@@ -274,6 +274,9 @@ src_prepare() {
 	#epatch "${FILESDIR}"/ati-drivers-old_rsp.patch
 	# first hunk applied upstream second (x32 related) was not
 	epatch "${FILESDIR}"/ati-drivers-x32_something_something.patch
+
+	#fixes bug #420751
+	epatch "${FILESDIR}"/ati-drivers-do_mmap.patch
 
 	# compile fix for linux-3.7
 	# https://bugs.gentoo.org/show_bug.cgi?id=438516
