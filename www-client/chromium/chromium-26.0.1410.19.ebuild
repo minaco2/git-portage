@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/Attic/chromium-27.0.1423.0.ebuild,v 1.4 2013/03/01 02:15:33 floppym Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/Attic/chromium-26.0.1410.19.ebuild,v 1.1 2013/03/01 02:15:33 floppym Exp $
 
 EAPI="5"
 PYTHON_COMPAT=( python{2_6,2_7} )
@@ -132,7 +132,7 @@ src_prepare() {
 
 	epatch "${FILESDIR}/${PN}-gpsd-r0.patch"
 	epatch "${FILESDIR}/${PN}-system-v8-r0.patch"
-	epatch "${FILESDIR}/${PN}-system-ffmpeg-r3.patch"
+	epatch "${FILESDIR}/${PN}-system-ffmpeg-r2.patch"
 
 	epatch_user
 
