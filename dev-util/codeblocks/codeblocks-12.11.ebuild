@@ -1,19 +1,18 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-util/codeblocks/codeblocks-9999.ebuild,v 1.5 2013/03/04 04:57:48 dirtyepic Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-util/codeblocks/codeblocks-12.11.ebuild,v 1.1 2013/03/04 04:57:48 dirtyepic Exp $
 
 EAPI="5"
 WX_GTK_VER="2.8"
 
-inherit autotools eutils subversion wxwidgets
+inherit eutils wxwidgets
 
 DESCRIPTION="The open source, cross platform, free C++ IDE."
 HOMEPAGE="http://www.codeblocks.org/"
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
-SRC_URI=""
-ESVN_REPO_URI="svn://svn.berlios.de/${PN}/trunk"
+KEYWORDS="~amd64 ~ppc ~x86 ~x86-fbsd"
+SRC_URI="mirror://berlios/codeblocks/${P/-/_}-1.tar.gz"
 
 IUSE="contrib debug pch static-libs"
 
@@ -27,18 +26,7 @@ RDEPEND="app-arch/zip
 DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
-src_unpack() {
-	subversion_src_unpack
-}
-
-src_prepare() {
-	# Let's make the autorevision work.
-	subversion_wc_info
-	CB_LCD=$(LC_ALL=C svn info "${ESVN_WC_PATH}" | grep "^Last Changed Date:" | cut -d" " -f4,5)
-	echo "m4_define([SVN_REV], ${ESVN_WC_REVISION})" > revision.m4
-	echo "m4_define([SVN_DATE], ${CB_LCD})" >> revision.m4
-	eautoreconf
-}
+S="${WORKDIR}/${P}release8629"
 
 src_configure() {
 	econf \
@@ -47,11 +35,6 @@ src_configure() {
 		$(use_enable pch) \
 		$(use_enable static-libs static) \
 		$(use_with contrib contrib-plugins all)
-}
-
-src_compile() {
-	emake clean-zipfiles
-	emake
 }
 
 src_install() {
