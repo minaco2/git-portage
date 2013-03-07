@@ -1,19 +1,18 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sci-mathematics/yafu/yafu-9999.ebuild,v 1.3 2013/03/07 09:58:11 jlec Exp $
+# $Header: /var/cvsroot/gentoo-x86/sci-mathematics/yafu/yafu-1.34.3.ebuild,v 1.1 2013/03/07 09:58:11 jlec Exp $
 
 EAPI=5
 
-inherit eutils subversion versionator
+inherit eutils versionator
 
 DESCRIPTION="Yet another factoring utility"
 HOMEPAGE="http://sourceforge.net/projects/yafu/"
-#SRC_URI="mirror://sourceforge/${PN}/${PV}/${P}-src.zip"
-ESVN_REPO_URI="https://yafu.svn.sourceforge.net/svnroot/yafu"
+SRC_URI="mirror://sourceforge/${PN}/${PV}/${PN}-$(get_version_component_range 1-2)-src.zip"
 
 SLOT="0"
 LICENSE="public-domain"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 # nfs is overloaded, so using less confusing sieve here
 IUSE="+sieve"
 
@@ -26,7 +25,6 @@ DEPEND="
 RDEPEND="${DEPEND}"
 
 src_prepare() {
-	cd trunk
 	# This is not nice. But then the Makefile is quite special :)
 	sed -i -e 's:../gmp/include:gmp:' Makefile 		|| die "Failed to rectify things"
 	sed -i -e 's:../gmp-ecm/include:gmp-ecm:' Makefile 	|| die "Failed to rectify things"
@@ -42,7 +40,6 @@ src_prepare() {
 
 src_compile() {
 	local VAR=""
-	cd trunk
 	# hmm, not that useful:
 	#VAR="TIMING=1 "
 	use sieve && VAR+="NFS=1"
