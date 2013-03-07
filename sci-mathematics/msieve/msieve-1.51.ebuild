@@ -1,19 +1,18 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sci-mathematics/msieve/msieve-9999.ebuild,v 1.2 2013/03/07 09:52:28 jlec Exp $
+# $Header: /var/cvsroot/gentoo-x86/sci-mathematics/msieve/msieve-1.51.ebuild,v 1.1 2013/03/07 09:52:28 jlec Exp $
 
 EAPI=5
 
-inherit eutils subversion toolchain-funcs
+inherit eutils toolchain-funcs
 
 DESCRIPTION="A C library implementing a suite of algorithms to factor large integers"
 HOMEPAGE="http://sourceforge.net/projects/msieve/"
-#SRC_URI="mirror://sourceforge/${PN}/${PN}/Msieve%20v${PV}/${PN}${PV/./}src.tar.gz"
-ESVN_REPO_URI="https://msieve.svn.sourceforge.net/svnroot/msieve"
+SRC_URI="mirror://sourceforge/${PN}/${PN}/Msieve%20v${PV}/${PN}${PV/./}.tar.gz"
 
 LICENSE="public-domain"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="zlib +ecm mpi"
 
 # some linking troubles with gwnum
@@ -24,15 +23,17 @@ DEPEND="
 RDEPEND="${DEPEND}"
 
 src_prepare() {
-	cd trunk
 	# TODO: Integrate ggnfs properly
+	epatch \
+		"${FILESDIR}"/${P}-reduce-printf.patch \
+		"${FILESDIR}"/fix-version.patch \
+		"${FILESDIR}"/fix-version2.patch
 	sed -i -e 's/-march=k8//' Makefile 		|| die
 	sed -i -e 's/CC =/#CC =/' Makefile 		|| die
 	sed -i -e 's/CFLAGS =/CFLAGS +=/' Makefile 	|| die
 }
 
 src_compile() {
-	cd trunk
 	use ecm && export "ECM=1"
 	use mpi && export "MPI=1"
 	use zlib && export "ZLIB=1"
@@ -44,7 +45,6 @@ src_compile() {
 }
 
 src_install() {
-	cd trunk
 	mkdir -p "${D}/usr/include/msieve"
 	mkdir -p "${D}/usr/lib/"
 	mkdir -p "${D}/usr/share/doc/${P}/"
