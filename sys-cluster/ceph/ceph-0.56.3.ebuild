@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-cluster/ceph/ceph-9999.ebuild,v 1.2 2013/03/11 16:50:57 alexxy Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-cluster/ceph/ceph-0.56.3.ebuild,v 1.1 2013/03/11 16:50:57 alexxy Exp $
 
 EAPI=5
 
@@ -101,7 +101,6 @@ src_install() {
 	newinitd "${T}/${PN}.initd" ${PN}
 	newconfd "${FILESDIR}/${PN}.confd" ${PN}
 
-	#install udev rules
+	# install udev rules
 	udev_dorules udev/50-rbd.rules
-	udev_dorules udev/95-ceph-osd.rules
 }
