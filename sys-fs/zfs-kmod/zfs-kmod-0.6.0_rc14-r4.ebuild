@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-fs/zfs-kmod/zfs-kmod-9999.ebuild,v 1.10 2013/03/15 13:20:45 ryao Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-fs/zfs-kmod/Attic/zfs-kmod-0.6.0_rc14-r4.ebuild,v 1.1 2013/03/15 13:20:45 ryao Exp $
 
 EAPI="4"
 

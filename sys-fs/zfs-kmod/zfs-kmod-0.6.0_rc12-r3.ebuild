@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-fs/zfs-kmod/zfs-kmod-9999.ebuild,v 1.10 2013/03/15 13:20:45 ryao Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-fs/zfs-kmod/zfs-kmod-0.6.0_rc12-r3.ebuild,v 1.1 2013/03/15 13:20:45 ryao Exp $
 
 EAPI="4"
 
@@ -16,8 +16,9 @@ if [ ${PV} == "9999" ] ; then
 else
 	inherit eutils versionator
 	MY_PV=$(replace_version_separator 3 '-')
-	SRC_URI="https://github.com/zfsonlinux/zfs/archive/zfs-${MY_PV}.tar.gz"
-	S="${WORKDIR}/zfs-zfs-${MY_PV}"
+	S="${WORKDIR}/zfs-${MY_PV}"
+	SRC_URI="mirror://github/zfsonlinux/zfs/zfs-${MY_PV}.tar.gz
+		http://dev.gentoo.org/~ryao/dist/${PN}-${MY_PV}-p0.tar.xz"
 	KEYWORDS="~amd64"
 fi
 
@@ -56,34 +57,27 @@ pkg_setup() {
 	kernel_is ge 2 6 26 || die "Linux 2.6.26 or newer required"
 
 	[ ${PV} != "9999" ] && \
-		{ kernel_is le 3 9 || die "Linux 3.9 is the latest supported version."; }
+		{ kernel_is le 3 8 || die "Linux 3.8 is the latest supported version."; }
 
 	check_extra_config
 }
 
 src_prepare() {
-	# Provide /usr/src/zfs symlink for lustre
-	epatch "${FILESDIR}/${P}-symlink-headers.patch"
-
 	if [ ${PV} != "9999" ]
 	then
+		# Apply patch set
+		EPATCH_SUFFIX="patch" \
+		EPATCH_FORCE="yes" \
+		epatch "${WORKDIR}/${PN}-${MY_PV}-patches"
+
 		# Cast constant for 32-bit compatibility
-		epatch "${FILESDIR}/${P}-cast-const-for-32bit-compatibility.patch"
+		epatch "${FILESDIR}/${PN}-0.6.0_rc14-cast-const-for-32bit-compatibility.patch"
 
 		# Handle missing name length check in Linux VFS
-		epatch "${FILESDIR}/${P}-vfs-name-length-compatibility.patch"
-
-		# Fix NULL pointer exception on hardened kernels, bug #457176
-		epatch "${FILESDIR}/${P}-improved-hardened-support.patch"
+		epatch "${FILESDIR}/${PN}-0.6.0_rc14-vfs-name-length-compatibility.patch"
 
 		# Fix barrier regression on Linux 2.6.37 and later
-		epatch "${FILESDIR}/${P}-flush-properly.patch"
-
-		# Improve accuracy of autotools checks
-		epatch "${FILESDIR}/${P}-improved-autotools-checks.patch"
-
-		# Linux 3.9 Support
-		epatch "${FILESDIR}/${P}-linux-3.9-compat.patch"
+		epatch "${FILESDIR}/${PN}-0.6.0_rc14-flush-properly.patch"
 	fi
 
 	# Remove GPLv2-licensed ZPIOS unless we are debugging
@@ -94,8 +88,6 @@ src_prepare() {
 
 src_configure() {
 	use custom-cflags || strip-flags
-	filter-ldflags -Wl,*
-
 	set_arch_to_kernel
 	local myeconfargs=(
 		--bindir="${EPREFIX}/bin"
@@ -109,8 +101,8 @@ src_configure() {
 }
 
 src_install() {
-	autotools-utils_src_install
 	dodoc AUTHORS COPYRIGHT DISCLAIMER README.markdown
+	autotools-utils_src_install
 }
 
 pkg_postinst() {
@@ -122,10 +114,4 @@ pkg_postinst() {
 		ewarn "at least 256M and decreasing zfs_arc_max to some value less than that."
 	fi
 
-	ewarn "This version of ZFSOnLinux introduces support for features flags."
-	ewarn "If you upgrade your pools to make use of feature flags, you will lose"
-	ewarn "the ability to import them using older versions of ZFSOnLinux."
-	ewarn "Any new pools will be created with feature flag support and will"
-	ewarn "not be compatible with older versions of ZFSOnLinux. To create a new"
-	ewarn "pool that is backward compatible, use zpool create -o version=28 ..."
 }
