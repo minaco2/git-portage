@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-kernel/spl/spl-0.6.0_rc10.ebuild,v 1.9 2013/03/15 13:17:03 ryao Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-kernel/spl/Attic/spl-0.6.0_rc14-r2.ebuild,v 1.1 2013/03/15 13:17:03 ryao Exp $
 
 EAPI="4"
 AUTOTOOLS_AUTORECONF="1"
@@ -13,8 +13,8 @@ if [[ ${PV} == "9999" ]] ; then
 else
 	inherit eutils versionator
 	MY_PV=$(replace_version_separator 3 '-')
-	SRC_URI="mirror://github/zfsonlinux/${PN}/${PN}-${MY_PV}.tar.gz"
-	S="${WORKDIR}/${PN}-${MY_PV}"
+	SRC_URI="https://github.com/zfsonlinux/${PN}/archive/${PN}-${MY_PV}.tar.gz"
+	S="${WORKDIR}/${PN}-${PN}-${MY_PV}"
 	KEYWORDS="~amd64"
 fi
 
@@ -40,9 +40,9 @@ pkg_setup() {
 	CONFIG_CHECK="
 		!DEBUG_LOCK_ALLOC
 		!GRKERNSEC_HIDESYM
-		!PREEMPT
 		MODULES
 		KALLSYMS
+		!PAX_KERNEXEC_PLUGIN_METHOD_OR
 		ZLIB_DEFLATE
 		ZLIB_INFLATE
 	"
@@ -50,7 +50,7 @@ pkg_setup() {
 	kernel_is ge 2 6 26 || die "Linux 2.6.26 or newer required"
 
 	[ ${PV} != "9999" ] && \
-		{ kernel_is le 3 6 || die "Linux 3.6 is the latest supported version."; }
+		{ kernel_is le 3 9 || die "Linux 3.9 is the latest supported version."; }
 
 	check_extra_config
 }
@@ -59,27 +59,31 @@ src_prepare() {
 	# Workaround for hard coded path
 	sed -i "s|/sbin/lsmod|/bin/lsmod|" scripts/check.sh || die
 
+	# Provide /usr/src/spl symlink for lustre
+	epatch "${FILESDIR}/${P}-symlink-headers.patch"
+
 	if [ ${PV} != "9999" ]
 	then
-		# Fix potential deadlocks when ZFS is used on swap
-		epatch "${FILESDIR}/${PN}-0.6.0_rc9-alias-km-sleep-with-km-pushpage.patch"
-
-		# Linux 3.6 Support
-		epatch "${FILESDIR}/${PN}-0.6.0_rc11-linux-3.6-compat.patch"
-		epatch "${FILESDIR}/${PN}-0.6.0_rc12-fix-3.6-compat-regression.patch"
-
 		# Fix x86 build failures on Linux 3.4 and later, bug #450646
-		epatch "${FILESDIR}/${PN}-0.6.0_rc14-fix-atomic64-checks.patch"
+		epatch "${FILESDIR}/${P}-fix-atomic64-checks.patch"
 
 		# Fix autotools check that fails on ~ppc64
-		epatch "${FILESDIR}/${PN}-0.6.0_rc14-fix-mutex-owner-check.patch"
+		epatch "${FILESDIR}/${P}-fix-mutex-owner-check.patch"
+
+		# Linux 3.9 Support
+		epatch "${FILESDIR}/${P}-linux-3.9-compat.patch"
 	fi
+
+	# splat is unnecessary unless we are debugging
+	use debug || sed -e 's/^subdir-m += splat$//' -i "${S}/module/Makefile.in"
 
 	autotools-utils_src_prepare
 }
 
 src_configure() {
 	use custom-cflags || strip-flags
+	filter-ldflags -Wl,*
+
 	set_arch_to_kernel
 	local myeconfargs=(
 		--bindir="${EPREFIX}/bin"
@@ -91,6 +95,11 @@ src_configure() {
 		$(use_enable debug-log)
 	)
 	autotools-utils_src_configure
+}
+
+src_install() {
+	autotools-utils_src_install
+	dodoc AUTHORS DISCLAIMER INSTALL README.markdown
 }
 
 src_test() {
