@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-apps/tt-rss/Attic/tt-rss-1.7.1.ebuild,v 1.1 2013/03/09 10:16:46 hwoarang Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-apps/tt-rss/Attic/tt-rss-1.7.4.ebuild,v 1.1 2013/03/17 19:23:32 hwoarang Exp $
 
 EAPI="2"
 
