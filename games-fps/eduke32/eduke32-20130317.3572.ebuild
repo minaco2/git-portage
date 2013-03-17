@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/games-fps/eduke32/eduke32-20130207.3467.ebuild,v 1.2 2013/03/17 21:16:21 hasufell Exp $
+# $Header: /var/cvsroot/gentoo-x86/games-fps/eduke32/eduke32-20130317.3572.ebuild,v 1.1 2013/03/17 21:16:21 hasufell Exp $
 
 # TODO/FIXME:
 # lunatic broken
