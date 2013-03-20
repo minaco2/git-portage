@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-misc/siproxd/siproxd-0.8.0-r2.ebuild,v 1.5 2013/03/20 17:19:50 chithanh Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-misc/siproxd/siproxd-0.8.1.ebuild,v 1.1 2013/03/20 17:19:50 chithanh Exp $
 
 EAPI="2"
 
@@ -12,7 +12,7 @@ SRC_URI="mirror://sourceforge/${PN}/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="~amd64 ~x86"
 IUSE="examples doc static"
 # TODO: debug can be used but dmalloc is breaking the build
 # upstream has been contacted, see bug 2649238 in their bugtracker
@@ -72,7 +72,7 @@ src_configure() {
 src_install() {
 	einstall || die "einstall failed"
 
-	newinitd "${FILESDIR}"/${PN}.rc6 ${PN} || die "newinitd failed"
+	newinitd "${FILESDIR}"/${PN}.rc7 ${PN} || die "newinitd failed"
 
 	dodoc AUTHORS ChangeLog NEWS README RELNOTES TODO \
 		doc/FAQ doc/FLI4L_HOWTO.txt doc/KNOWN_BUGS \
@@ -95,8 +95,8 @@ src_install() {
 	fi
 
 	# set up siproxd directories
-	keepdir /var/{lib,run}/${PN} || die "keepdir failed"
-	fowners siproxd:siproxd /var/{lib,run}/${PN} || die "fowners failed"
+	keepdir /var/lib/${PN} || die "keepdir failed"
+	fowners siproxd:siproxd /var/lib/${PN} || die "fowners failed"
 }
 
 pkg_postinst() {
