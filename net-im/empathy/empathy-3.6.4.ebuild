@@ -1,13 +1,13 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-im/empathy/empathy-3.6.3.ebuild,v 1.3 2013/03/31 14:57:15 eva Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-im/empathy/empathy-3.6.4.ebuild,v 1.1 2013/03/31 14:57:15 eva Exp $
 
 EAPI="5"
 GCONF_DEBUG="no"
 GNOME2_LA_PUNT="yes"
-PYTHON_DEPEND="2:2.5" # build only
+PYTHON_COMPAT=( python2_{5,6,7} )
 
-inherit gnome2 python virtualx
+inherit gnome2 python-any-r1 virtualx
 
 DESCRIPTION="Telepathy instant messaging and video/audio call client for GNOME"
 HOMEPAGE="http://live.gnome.org/Empathy"
@@ -73,6 +73,7 @@ RDEPEND="${COMMON_DEPEND}
 	x11-themes/gnome-icon-theme-symbolic
 	gnome? ( gnome-extra/gnome-contacts )"
 DEPEND="${COMMON_DEPEND}
+	${PYTHON_DEPS}
 	dev-libs/libxml2:2
 	dev-libs/libxslt
 	>=dev-util/intltool-0.50.0
@@ -82,12 +83,6 @@ DEPEND="${COMMON_DEPEND}
 		>=dev-libs/check-0.9.4 )
 "
 PDEPEND=">=net-im/telepathy-mission-control-5.14"
-
-pkg_setup() {
-	# Build time python tools need python2
-	python_set_active_version 2
-	python_pkg_setup
-}
 
 src_configure() {
 	DOCS="CONTRIBUTORS AUTHORS ChangeLog NEWS README"
