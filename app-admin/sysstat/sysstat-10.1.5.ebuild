@@ -1,9 +1,9 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-admin/sysstat/Attic/sysstat-10.1.4.ebuild,v 1.1 2013/03/08 17:44:08 jer Exp $
+# $Header: /var/cvsroot/gentoo-x86/app-admin/sysstat/sysstat-10.1.5.ebuild,v 1.1 2013/04/02 19:34:55 jer Exp $
 
 EAPI=5
-inherit eutils multilib
+inherit eutils multilib toolchain-funcs
 
 DESCRIPTION="System performance tools for Linux"
 HOMEPAGE="http://pagesperso-orange.fr/sebastien.godard/"
@@ -57,6 +57,7 @@ src_prepare() {
 }
 
 src_configure() {
+	tc-export AR
 	sa_lib_dir=/usr/$(get_libdir)/sa \
 		conf_dir=/etc \
 		rcdir=Gentoo-does-not-use-rc.d \
