@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-office/libreoffice-l10n/Attic/libreoffice-l10n-4.0.1.2.ebuild,v 1.1 2013/03/06 12:51:26 scarabeus Exp $
+# $Header: /var/cvsroot/gentoo-x86/app-office/libreoffice-l10n/libreoffice-l10n-4.0.2.2.ebuild,v 1.1 2013/04/04 11:37:21 scarabeus Exp $
 
 EAPI=4
 
