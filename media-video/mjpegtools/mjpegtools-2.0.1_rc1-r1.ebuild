@@ -1,12 +1,12 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-video/mjpegtools/mjpegtools-2.0.0-r3.ebuild,v 1.9 2013/04/06 09:58:44 billie Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-video/mjpegtools/mjpegtools-2.0.1_rc1-r1.ebuild,v 1.1 2013/04/06 09:58:44 billie Exp $
 
 EAPI=5
 
-inherit autotools eutils flag-o-matic toolchain-funcs
+inherit flag-o-matic toolchain-funcs
 
-MY_P=${P/_/}
+MY_P=${P/_rc/RC}
 
 DESCRIPTION="Tools for MJPEG video"
 HOMEPAGE="http://mjpeg.sourceforge.net/"
@@ -14,7 +14,7 @@ SRC_URI="mirror://sourceforge/mjpeg/${MY_P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="1"
-KEYWORDS="alpha amd64 hppa ppc ppc64 sparc x86 ~amd64-fbsd"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~amd64-fbsd"
 IUSE="dga dv gtk mmx png quicktime sdl sdlgfx static-libs v4l"
 REQUIRED_USE="sdlgfx? ( sdl )"
 
@@ -36,7 +36,7 @@ DEPEND="${RDEPEND}
 	virtual/awk
 	virtual/pkgconfig"
 
-S="${WORKDIR}/${P/_rc*}"
+S="${WORKDIR}/${MY_P}"
 
 pkg_pretend() {
 	if has_version ">=sys-kernel/linux-headers-2.6.38" && use v4l; then
@@ -45,14 +45,7 @@ pkg_pretend() {
 	fi
 }
 
-# Avoid execution of linux-info_pkg_setup()
-pkg_setup() { : ; }
-
 src_prepare() {
-	epatch "${FILESDIR}"/${P}-sdlgfx-automagic.patch
-	epatch "${FILESDIR}"/${P}-gcc470.patch
-	epatch "${FILESDIR}"/${P}-stream-params-include.patch
-	eautoreconf
 	sed -i -e '/ARCHFLAGS=/s:=.*:=:' configure
 }
 
@@ -84,12 +77,11 @@ src_install() {
 }
 
 pkg_postinst() {
-# uncomment this in the next version
-#	if [[ -z "${REPLACING_VERSIONS}" ]]; then
+	if [[ -z "${REPLACING_VERSIONS}" ]]; then
 		elog "mjpegtools installs user contributed scripts which require additional"
 		elog "dependencies not pulled in by the installation."
 		elog "These have to be installed manually."
 		elog "Currently known extra dpendencies are: ffmpeg, mencoder from mplayer,"
 		elog "parts of transcode, mpeg2dec from libmpeg2, sox, toolame, vcdimager, python."
-#	fi
+	fi
 }
