@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-vcs/gitg/gitg-0.2.6.ebuild,v 1.2 2013/04/13 13:14:04 ikelos Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-vcs/gitg/gitg-0.2.7.ebuild,v 1.1 2013/04/13 13:14:04 ikelos Exp $
 
 EAPI=5
 
@@ -17,9 +17,7 @@ KEYWORDS="~amd64 ~x86 ~amd64-linux ~x86-linux"
 IUSE="debug glade"
 
 RDEPEND=">=dev-libs/glib-2.26:2
-	<dev-libs/glib-2.36.0:2
 	>=x11-libs/gtk+-3.0.0:3
-	<x11-libs/gtk+-3.8.0:3
 	>=x11-libs/gtksourceview-3.1.3:3.0
 	>=gnome-base/gconf-2.10:2
 	>=gnome-base/gsettings-desktop-schemas-0.1.1
