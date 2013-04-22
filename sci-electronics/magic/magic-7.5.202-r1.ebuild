@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sci-electronics/magic/magic-7.5.230.ebuild,v 1.2 2013/04/22 09:18:03 xmw Exp $
+# $Header: /var/cvsroot/gentoo-x86/sci-electronics/magic/magic-7.5.202-r1.ebuild,v 1.1 2013/04/22 09:18:03 xmw Exp $
 
 EAPI=5
 
@@ -26,8 +26,8 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	epatch "${FILESDIR}/${PN}-ldflags.patch"
-	epatch "${FILESDIR}/${PN}-7.5.202-install.patch" #422687
-	epatch "${FILESDIR}/${PN}-7.5.202-include.patch"
+	epatch "${FILESDIR}/${P}-install.patch" #422687
+	epatch "${FILESDIR}/${P}-include.patch"
 	cd scripts
 	eautoreconf
 	cd ..
