@@ -1,19 +1,20 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-cluster/pacemaker/pacemaker-1.1.10_rc1.ebuild,v 1.2 2013/04/23 08:04:02 ultrabug Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-cluster/pacemaker/pacemaker-1.1.8-r2.ebuild,v 1.1 2013/04/23 08:04:02 ultrabug Exp $
 
-EAPI="5"
+EAPI=4
+
 PYTHON_DEPEND="2"
-WANT_AUTOMAKE="1.12"
 
 inherit autotools base python
 
-MY_PN="Pacemaker"
-MY_P=${MY_PN}-${PV/_/-}
+MY_PN=Pacemaker
+MY_P=${MY_PN}-${PV}
+MY_TREE="1f8858c"
 
 DESCRIPTION="Pacemaker CRM"
 HOMEPAGE="http://www.linux-ha.org/wiki/Pacemaker"
-SRC_URI="https://github.com/ClusterLabs/${PN}/archive/${MY_P}.tar.gz"
+SRC_URI="https://github.com/ClusterLabs/${PN}/tarball/${MY_P} -> ${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -35,7 +36,11 @@ DEPEND="
 "
 RDEPEND="${DEPEND}"
 
-S="${WORKDIR}/${PN}-${MY_P}"
+PATCHES=(
+	"${FILESDIR}"/${PV}-backwards_compatibility.patch
+	)
+
+S="${WORKDIR}/ClusterLabs-${PN}-${MY_TREE}"
 
 pkg_setup() {
 	python_set_active_version 2
@@ -45,9 +50,8 @@ pkg_setup() {
 src_prepare() {
 	base_src_prepare
 	sed -i -e "/ggdb3/d" configure.ac || die
-	sed -i -e "s/ -ggdb//g" configure.ac || die
-	sed -i -e "s/uid2username(uid)/uid2username(uid_client)/g" lib/common/ipc.c || die
-	sed -i -e "s:<glib/ghash.h>:<glib.h>:" lib/ais/plugin.c || die
+	sed -e "s:<glib/ghash.h>:<glib.h>:" \
+		-i lib/ais/plugin.c || die
 	eautoreconf
 	python_convert_shebangs -r 2 .
 }
@@ -61,7 +65,6 @@ src_configure() {
 	fi
 	# appends lib to localstatedir automatically
 	econf \
-		--libdir=/usr/$(get_libdir) \
 		--localstatedir=/var \
 		--disable-dependency-tracking \
 		--disable-fatal-warnings \
@@ -77,7 +80,7 @@ src_configure() {
 
 src_install() {
 	base_src_install
-	rm -rf "${D}"/var/run "${D}"/etc/init.d
+	rm -rf "${D}"/var/run
 	newinitd "${FILESDIR}/${PN}.initd" ${PN} || die
 	if has_version "<sys-cluster/corosync-2.0"; then
 		insinto /etc/corosync/service.d
