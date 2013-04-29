@@ -1,8 +1,8 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-lang/orc/orc-0.4.16-r1.ebuild,v 1.6 2013/04/29 13:49:11 tetromino Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-lang/orc/orc-0.4.17.ebuild,v 1.1 2013/04/29 13:49:11 tetromino Exp $
 
-EAPI=4
+EAPI="5"
 inherit autotools eutils flag-o-matic
 
 DESCRIPTION="The Oil Runtime Compiler, a just-in-time compiler for array operations"
@@ -11,7 +11,7 @@ SRC_URI="http://code.entropywave.com/download/orc/${P}.tar.gz"
 
 LICENSE="BSD BSD-2"
 SLOT="0"
-KEYWORDS="amd64 arm hppa x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
+KEYWORDS="~amd64 ~arm ~hppa ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 IUSE="static-libs examples"
 
 RDEPEND=""
@@ -21,7 +21,7 @@ DEPEND="${RDEPEND}
 src_prepare() {
 	if ! use examples; then
 		sed -i -e '/SUBDIRS/s:examples::' Makefile.am || die
-		epatch "${FILESDIR}/${PN}-0.4.17-AM_CONFIG_HEADER.patch" # in 0.4.18
+		epatch "${FILESDIR}/${P}-AM_CONFIG_HEADER.patch" # in 0.4.18
 		AT_M4DIR="m4" eautoreconf
 	fi
 }
@@ -38,6 +38,5 @@ src_configure() {
 
 src_install() {
 	default
-
-	find "${ED}" -name '*.la' -delete
+	prune_libtool_files
 }
