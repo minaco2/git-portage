@@ -1,10 +1,40 @@
 # ChangeLog for profile directory
 # Copyright 1999-2013 Gentoo Foundation; Distributed under the GPL v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/ChangeLog,v 1.7806 2013/05/04 13:41:58 mgorny Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/ChangeLog,v 1.7816 2013/05/06 06:56:55 ulm Exp $
 #
 # This ChangeLog should include records for all changes in profiles directory.
 # Only typo fixes which don't affect portage/repoman behaviour could be avoided
 # here. If in doubt put a record here!
+
+  06 May 2013; Ulrich Müller <ulm@gentoo.org> package.mask:
+  Mask dev-lisp/emacs-cl for removal, bug 466444.
+
+  06 May 2013; Ulrich Müller <ulm@gentoo.org> package.mask:
+  Mask media-fonts/adi-dsp-fonts for removal, bug 452372.
+
+  05 May 2013; Tom Wijsman <TomWij@gentoo.org> package.mask:
+  Masking media-video/handbrake until =media-video/ffmpeg-1.2 is unmasked.
+
+  05 May 2013; Mike Gilbert <floppym@gentoo.org> package.mask:
+  Mask pypy-2.0_beta2.
+
+  05 May 2013; Tom Wijsman <TomWij@gentoo.org> package.mask:
+  Dropped www-servers/meteor mask, package has been removed.
+
+  05 May 2013; Justin Lecher <jlec@gentoo.org> package.mask:
+  Drop obsolete mask entries
+
+  05 May 2013; Pacho Ramos <pacho@gentoo.org> package.mask:
+  Update Gnome 3.8 mask
+
+  05 May 2013; Michał Górny <mgorny@gentoo.org> package.mask:
+  Mask multilib libsndfile before committing.
+
+  04 May 2013; Jeroen Roovers <jer@gentoo.org> hardened/linux/package.use.mask:
+  Mask USE=profile for net-analyzer/wireshark (bug #468404).
+
+  04 May 2013; Samuli Suominen <ssuominen@gentoo.org> package.mask:
+  Update libv4l mask from 0.8.9-r1 to 0.9.5-r1.
 
   04 May 2013; Michał Górny <mgorny@gentoo.org>
   default/linux/package.use.mask:
