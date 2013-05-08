@@ -1,12 +1,14 @@
---- printing/backend/print_backend.cc.orig	2012-09-27 09:40:47.000000000 +0200
-+++ printing/backend/print_backend.cc	2012-09-27 09:41:26.000000000 +0200
-@@ -6,8 +6,8 @@
- 
- #include <algorithm>
- 
--#include "third_party/icu/public/common/unicode/uchar.h"
- #include "ui/base/text/text_elider.h"
-+#include "unicode/uchar.h"
- 
- namespace {
- 
+--- build/linux/unbundle/icu.gyp.orig	2013-05-08 16:16:58.989728264 +0000
++++ build/linux/unbundle/icu.gyp	2013-05-08 16:18:07.910115715 +0000
+@@ -7,6 +7,11 @@
+     {
+       'target_name': 'system_icu',
+       'type': 'none',
++      'direct_dependent_settings': {
++        'defines': [
++          'U_USING_ICU_NAMESPACE=0',
++        ],
++      },
+       'link_settings': {
+         'ldflags': [
+           '<!@(icu-config --ldflags)',
