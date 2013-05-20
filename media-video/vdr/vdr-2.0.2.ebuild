@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-video/vdr/vdr-2.0.1-r1.ebuild,v 1.2 2013/05/20 18:16:15 hd_brummy Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-video/vdr/vdr-2.0.2.ebuild,v 1.1 2013/05/20 18:16:15 hd_brummy Exp $
 
 EAPI="5"
 
@@ -23,7 +23,7 @@ MY_PV="${PV%_p*}"
 MY_P="${PN}-${MY_PV}"
 S="${WORKDIR}/${MY_P}"
 
-EXT_P="extpng-${PN}-2.0.0-gentoo-edition-v1"
+EXT_P="extpng-${P}-gentoo-edition-v1"
 
 DESCRIPTION="Video Disk Recorder - turns a pc into a powerful set top box for DVB"
 HOMEPAGE="http://www.tvdr.de/"
