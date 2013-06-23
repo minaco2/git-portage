@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-analyzer/zabbix/Attic/zabbix-2.0.6-r4.ebuild,v 1.1 2013/06/22 02:37:02 mattm Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-analyzer/zabbix/zabbix-2.0.6-r5.ebuild,v 1.1 2013/06/23 05:26:18 mattm Exp $
 
 EAPI="2"
 
@@ -29,7 +29,7 @@ COMMON_DEPEND="snmp? ( net-analyzer/net-snmp )
 	postgres? ( >=dev-db/postgresql-base-8.3.0 )
 	oracle? ( >=dev-db/oracle-instantclient-basic-10.0.0.0 )
 	jabber? ( dev-libs/iksemel )
-	curl? ( net-misc/curl )
+	curl? ( <=net-misc/curl-7.27 )
 	openipmi? ( sys-libs/openipmi )
 	ssh? ( net-libs/libssh2 )
 	java? ( >=virtual/jdk-1.4 )
