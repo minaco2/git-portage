@@ -1,8 +1,8 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-misc/clipgrab/clipgrab-3.2.0.11.ebuild,v 1.2 2013/06/23 16:15:27 xmw Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-misc/clipgrab/clipgrab-3.2.1.0.ebuild,v 1.1 2013/06/23 16:15:27 xmw Exp $
 
-EAPI=4
+EAPI=5
 
 inherit qt4-r2 eutils
 
@@ -21,7 +21,7 @@ RDEPEND="${DEPEND}
 	media-video/ffmpeg"
 
 PATCHES=(
-	"${FILESDIR}/${PN}-3.2.0.10-obey.patch"
+	"${FILESDIR}/${PN}-3.2.1.0-obey.patch"
 )
 
 src_install() {
