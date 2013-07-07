@@ -1,22 +1,22 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/virtual/ruby-rdoc/ruby-rdoc-3.ebuild,v 1.4 2013/07/07 08:12:49 graaff Exp $
+# $Header: /var/cvsroot/gentoo-x86/virtual/rubygems/rubygems-6.ebuild,v 1.1 2013/07/07 08:10:42 graaff Exp $
 
 EAPI=5
 USE_RUBY="ruby20"
 
 inherit ruby-ng
 
-DESCRIPTION="Virtual ebuild for bundled and unbundled RDoc"
+DESCRIPTION="Virtual ebuild for rubygems"
 HOMEPAGE=""
 SRC_URI=""
 
 LICENSE=""
 SLOT="${USE_RUBY}"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd"
 IUSE=""
 
-RDEPEND="|| ( dev-ruby/rdoc[ruby_targets_ruby20] )"
+RDEPEND="dev-ruby/rubygems[ruby_targets_ruby20]"
 
 pkg_setup() { :; }
 src_unpack() { :; }
