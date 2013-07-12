@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-libs/mlt/mlt-0.8.8.ebuild,v 1.4 2013/07/12 13:11:34 aballier Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-libs/mlt/mlt-0.9.0.ebuild,v 1.2 2013/07/12 13:11:34 aballier Exp $
 
 EAPI=4
 PYTHON_DEPEND="python? 2:2.6"
@@ -86,6 +86,7 @@ src_configure() {
 	local myconf="--enable-gpl
 		--enable-gpl3
 		--enable-motion-est
+		--target-arch=$(tc-arch-kernel)
 		$(use_enable debug)
 		$(use_enable dv)
 		$(use_enable sse)
