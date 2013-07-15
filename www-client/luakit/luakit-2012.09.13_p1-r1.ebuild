@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/luakit/luakit-9999.ebuild,v 1.23 2013/07/15 18:22:05 wired Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/luakit/luakit-2012.09.13_p1-r1.ebuild,v 1.1 2013/07/15 18:22:05 wired Exp $
 
 EAPI=4
 
@@ -52,9 +52,6 @@ RDEPEND="
 
 src_prepare() {
 	sed -i -e "/^CFLAGS/s/-ggdb//" config.mk || die
-	# bug 385471
-	sed "s,@\$(CC) -o \$@ \$(OBJS) \$(LDFLAGS),@\$(CC) -o \$@ \$(OBJS)
-		\$(LDFLAGS)\n\t\paxctl -Cm luakit,g" -i Makefile
 }
 
 src_compile() {
