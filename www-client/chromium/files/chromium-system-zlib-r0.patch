@@ -1,29 +1,19 @@
---- build/linux/unbundle/zlib.gyp.orig	2013-05-08 00:04:11.690834349 +0000
-+++ build/linux/unbundle/zlib.gyp	2013-05-08 00:04:20.240885738 +0000
-@@ -43,6 +43,25 @@
-           '-lminizip',
-         ],
-       },
--    }
-+    },
-+    {
-+      'target_name': 'zip',
-+      'type': 'static_library',
-+      'dependencies': [
-+        'minizip',
-+        '../../base/base.gyp:base',
-+      ],
-+      'include_dirs': [
-+        '../..',
-+      ],
-+      'sources': [
-+        'google/zip.cc',
-+        'google/zip.h',
-+        'google/zip_internal.cc',
-+        'google/zip_internal.h',
-+        'google/zip_reader.cc',
-+        'google/zip_reader.h',
-+      ],
-+    },
-   ],
- }
+--- chrome/browser/metrics/compression_utils.cc.orig	2013-07-24 21:34:25.648251116 +0000
++++ chrome/browser/metrics/compression_utils.cc	2013-07-24 21:34:40.228343391 +0000
+@@ -8,7 +8,6 @@
+ 
+ #include "base/basictypes.h"
+ #include "third_party/zlib/zlib.h"
+-#include "third_party/zlib/zutil.h"
+ 
+ namespace {
+ 
+@@ -45,7 +44,7 @@
+                             Z_DEFAULT_COMPRESSION,
+                             Z_DEFLATED,
+                             MAX_WBITS + kWindowBitsToGetGzipHeader,
+-                            DEF_MEM_LEVEL,
++                            8,
+                             Z_DEFAULT_STRATEGY,
+                             ZLIB_VERSION,
+                             sizeof(z_stream));
