@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/virtual/udev/udev-197-r3.ebuild,v 1.2 2013/07/05 13:56:29 mgorny Exp $
+# $Header: /var/cvsroot/gentoo-x86/virtual/udev/udev-197-r3.ebuild,v 1.4 2013/07/29 03:06:58 patrick Exp $
 
 EAPI=5
 
