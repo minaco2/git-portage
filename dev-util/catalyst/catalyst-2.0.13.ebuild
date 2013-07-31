@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-util/catalyst/catalyst-2.0.12.2.ebuild,v 1.4 2013/07/31 04:34:00 mattst88 Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-util/catalyst/catalyst-2.0.13.ebuild,v 1.1 2013/07/31 04:34:00 mattst88 Exp $
 
 EAPI=3
 PYTHON_DEPEND="2"
@@ -13,7 +13,7 @@ if [[ ${PV} == *9999* ]]; then
 	KEYWORDS=""
 else
 	SRC_URI="mirror://gentoo/${P}.tar.bz2
-		http://dev.gentoo.org/~zerochaos/distfiles/${P}.tar.bz2"
+		http://dev.gentoo.org/~jmbsvicetto/distfiles/${P}.tar.bz2"
 	KEYWORDS="alpha amd64 arm hppa ia64 ~mips ppc ppc64 s390 sh sparc x86 ~x86-fbsd"
 fi
 inherit eutils multilib python
@@ -30,6 +30,8 @@ DEPEND="app-text/asciidoc"
 RDEPEND="app-arch/lbzip2
 	app-crypt/shash
 	virtual/cdrtools
+	x86? ( >=sys-boot/syslinux-3.72 )
+	amd64? ( >=sys-boot/syslinux-3.72 )
 	ccache? ( dev-util/ccache )
 	ia64? ( sys-fs/dosfstools )
 	kernel_linux? ( app-misc/zisofs-tools >=sys-fs/squashfs-tools-2.1 )"
@@ -80,7 +82,7 @@ src_install() {
 	doins files/catalyst.conf files/catalystrc || die "copying configuration"
 	insinto /usr/share/doc/${PF}/examples
 	doins examples/* || die
-	dodoc README ChangeLog AUTHORS
+	dodoc README AUTHORS
 	doman files/catalyst.1 files/catalyst-spec.5
 	# Here is where we actually enable ccache
 	use ccache && \
@@ -95,8 +97,4 @@ pkg_postinst() {
 	einfo "catalyst project page at:"
 	einfo "http://www.gentoo.org/proj/en/releng/catalyst/index.xml"
 	echo
-	elog "update_seed syntax has changed to make it more flexible."
-	elog "This is an optional setting supported by stage1 that runs an emerge"
-	elog "command on the seed stage before starting the stage1 build. (example:"
-	elog "'--update dev-libs/mpfr dev-libs/mpc dev-libs/gmp')"
 }
