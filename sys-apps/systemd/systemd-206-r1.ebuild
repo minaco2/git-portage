@@ -1,16 +1,8 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-apps/systemd/systemd-9999-r1.ebuild,v 1.4 2013/07/31 22:23:50 mgorny Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-apps/systemd/systemd-206-r1.ebuild,v 1.1 2013/07/31 22:23:50 mgorny Exp $
 
 EAPI=5
-
-#if LIVE
-AUTOTOOLS_AUTORECONF=yes
-EGIT_REPO_URI="git://anongit.freedesktop.org/${PN}/${PN}
-	http://cgit.freedesktop.org/${PN}/${PN}/"
-
-inherit git-2
-#endif
 
 AUTOTOOLS_PRUNE_LIBTOOL_FILES=all
 PYTHON_COMPAT=( python2_7 )
@@ -40,7 +32,7 @@ COMMON_DEPEND=">=sys-apps/dbus-1.6.8-r1
 	gudev? ( >=dev-libs/glib-2 )
 	http? ( net-libs/libmicrohttpd )
 	introspection? ( >=dev-libs/gobject-introspection-1.31.1 )
-	kmod? ( >=sys-apps/kmod-12 )
+	kmod? ( >=sys-apps/kmod-14-r1 )
 	lzma? ( app-arch/xz-utils )
 	pam? ( virtual/pam )
 	python? ( ${PYTHON_DEPS} )
@@ -58,7 +50,7 @@ RDEPEND="${COMMON_DEPEND}
 		>=sys-apps/util-linux-2.22
 		<sys-apps/sysvinit-2.88-r4
 	)
-	!vanilla? ( sys-apps/gentoo-systemd-integration )
+	!sys-apps/gentoo-systemd-integration
 	!sys-auth/nss-myhostname
 	!<sys-libs/glibc-2.10
 	!sys-fs/udev"
@@ -78,22 +70,6 @@ DEPEND="${COMMON_DEPEND}
 	virtual/pkgconfig
 	doc? ( >=dev-util/gtk-doc-1.18 )"
 
-#if LIVE
-DEPEND="${DEPEND}
-	dev-libs/gobject-introspection
-	>=dev-libs/libgcrypt-1.4.5
-	>=dev-util/gtk-doc-1.18"
-
-SRC_URI=
-KEYWORDS=
-
-src_prepare() {
-	gtkdocize --docdir docs/ || die
-
-	autotools-utils_src_prepare
-}
-#endif
-
 pkg_pretend() {
 	local CONFIG_CHECK="~AUTOFS4_FS ~BLK_DEV_BSG ~CGROUPS ~DEVTMPFS
 		~FANOTIFY ~HOTPLUG ~INOTIFY_USER ~IPV6 ~NET ~PROC_FS ~SIGNALFD
@@ -101,6 +77,22 @@ pkg_pretend() {
 #		~!FW_LOADER_USER_HELPER"
 
 	use pam && CONFIG_CHECK+=" ~AUDITSYSCALL"
+
+	# read null-terminated argv[0] from PID 1
+	# and see which path to systemd was used (if any)
+	local init_path
+	IFS= read -r -d '' init_path < /proc/1/cmdline
+	if [[ ${init_path} == */bin/systemd ]]; then
+		eerror "You are using a compatibility symlink to run systemd. The symlink"
+		eerror "has been removed. Please update your bootloader to use:"
+		eerror
+		eerror "	init=/usr/lib/systemd/systemd"
+		eerror
+		eerror "and reboot your system. We are sorry for the inconvenience."
+		if [[ ${MERGE_TYPE} != buildonly ]]; then
+			die "Compatibility symlink used to boot systemd."
+		fi
+	fi
 
 	if [[ ${MERGE_TYPE} != binary ]]; then
 		if [[ $(gcc-major-version) -lt 4
@@ -129,6 +121,21 @@ pkg_pretend() {
 
 pkg_setup() {
 	use python && python-single-r1_pkg_setup
+}
+
+src_prepare() {
+	local PATCHES=(
+		#477954 - gnome-shell-3.8* session unlock broken
+		"${FILESDIR}"/206-0001-logind-update-state-file-after-generating-the-sessio.patch
+		#474946 - localectl does not find keymaps
+		"${FILESDIR}"/206-0002-Add-usr-share-keymaps-to-localectl-supported-locatio.patch
+		#478198 - wrong permission for static-nodes
+		"${FILESDIR}"/206-0003-tmpfiles-support-passing-prefix-multiple-times.patch
+		"${FILESDIR}"/206-0004-tmpfiles-introduce-exclude-prefix.patch
+		"${FILESDIR}"/206-0005-tmpfiles-setup-exclude-dev-prefixes-files.patch
+	)
+
+	autotools-utils_src_prepare
 }
 
 src_configure() {
@@ -199,14 +206,37 @@ src_install() {
 		udevlibexecdir="${MY_UDEVDIR}" \
 		dist_udevhwdb_DATA=
 
+	# keep udev working without initramfs, for openrc compat
+	dodir /bin /sbin
+	mv "${D}"/usr/lib/systemd/systemd-udevd "${D}"/sbin/udevd || die
+	mv "${D}"/usr/bin/udevadm "${D}"/bin/udevadm || die
+	dosym ../../../sbin/udevd /usr/lib/systemd/systemd-udevd
+	dosym ../../bin/udevadm /usr/bin/udevadm
+
 	# zsh completion
 	insinto /usr/share/zsh/site-functions
 	newins shell-completion/systemd-zsh-completion.zsh "_${PN}"
+
+	# compat for init= use
+	dosym ../usr/lib/systemd/systemd /bin/systemd
+	dosym ../lib/systemd/systemd /usr/bin/systemd
+	# rsyslog.service depends on it...
+	dosym ../usr/bin/systemctl /bin/systemctl
 
 	# we just keep sysvinit tools, so no need for the mans
 	rm "${D}"/usr/share/man/man8/{halt,poweroff,reboot,runlevel,shutdown,telinit}.8 \
 		|| die
 	rm "${D}"/usr/share/man/man1/init.1 || die
+
+	if ! use vanilla; then
+		# Create /run/lock as required by new baselay/OpenRC compat.
+		systemd_dotmpfilesd "${FILESDIR}"/gentoo-run.conf
+
+		# Add mount-rules for /var/lock and /var/run, bug #433607
+		systemd_dounit "${FILESDIR}"/var-{lock,run}.mount
+		systemd_enable_service sysinit.target var-lock.mount
+		systemd_enable_service sysinit.target var-run.mount
+	fi
 
 	# Disable storing coredumps in journald, bug #433457
 	mv "${D}"/usr/lib/sysctl.d/50-coredump.conf{,.disabled} || die
@@ -214,6 +244,14 @@ src_install() {
 	# Preserve empty dirs in /etc & /var, bug #437008
 	keepdir /etc/binfmt.d /etc/modules-load.d /etc/tmpfiles.d \
 		/etc/systemd/ntp-units.d /etc/systemd/user /var/lib/systemd
+
+	# Check whether we won't break user's system.
+	local x
+	for x in /bin/systemd /usr/bin/systemd \
+		/usr/bin/udevadm /usr/lib/systemd/systemd-udevd
+	do
+		[[ -x ${D}${x} ]] || die "${x} symlink broken, aborting."
+	done
 }
 
 optfeature() {
