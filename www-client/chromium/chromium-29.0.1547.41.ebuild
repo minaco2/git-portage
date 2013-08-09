@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999-r1.ebuild,v 1.207 2013/08/09 03:45:46 floppym Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-29.0.1547.41.ebuild,v 1.1 2013/08/09 03:45:46 floppym Exp $
 
 EAPI="5"
 PYTHON_COMPAT=( python{2_6,2_7} )
@@ -10,15 +10,16 @@ CHROMIUM_LANGS="am ar bg bn ca cs da de el en_GB es es_LA et fa fi fil fr gu he
 	sv sw ta te th tr uk vi zh_CN zh_TW"
 
 inherit chromium eutils flag-o-matic multilib multiprocessing \
-	pax-utils portability python-any-r1 subversion toolchain-funcs versionator virtualx
+	pax-utils portability python-any-r1 toolchain-funcs versionator virtualx
 
 DESCRIPTION="Open-source version of Google Chrome web browser"
 HOMEPAGE="http://chromium.org/"
-ESVN_REPO_URI="http://src.chromium.org/svn/trunk/src"
+SRC_URI="https://commondatastorage.googleapis.com/chromium-browser-official/${P}-lite.tar.xz
+	test? ( https://commondatastorage.googleapis.com/chromium-browser-official/${P}-testdata.tar.xz )"
 
 LICENSE="BSD"
-SLOT="live"
-KEYWORDS=""
+SLOT="0"
+KEYWORDS="~amd64 ~arm ~x86"
 IUSE="bindist cups gnome gnome-keyring gps kerberos pulseaudio selinux +system-ffmpeg system-sqlite tcmalloc"
 
 # Native Client binaries are compiled with different set of flags, bug #452066.
@@ -37,7 +38,7 @@ RDEPEND=">=app-accessibility/speech-dispatcher-0.8:=
 		>=net-print/cups-1.3.11:=
 	)
 	>=dev-lang/v8-3.19.17:=
-	=dev-lang/v8-3.20*
+	=dev-lang/v8-3.19*
 	>=dev-libs/elfutils-0.149
 	dev-libs/expat:=
 	>=dev-libs/icu-49.1.1-r1:=
@@ -52,13 +53,13 @@ RDEPEND=">=app-accessibility/speech-dispatcher-0.8:=
 	gnome? ( >=gnome-base/gconf-2.24.0:= )
 	gnome-keyring? ( >=gnome-base/gnome-keyring-2.28.2:= )
 	gps? ( >=sci-geosciences/gpsd-3.7:=[shm] )
-	>=media-libs/alsa-lib-1.0.19
+	>=media-libs/alsa-lib-1.0.19:=
 	media-libs/flac:=
 	media-libs/harfbuzz:=[icu(+)]
 	>=media-libs/libjpeg-turbo-1.2.0-r1:=
 	media-libs/libpng:0=
 	media-libs/libvpx:=
-	>=media-libs/libwebp-0.3.1:=
+	>=media-libs/libwebp-0.2.0_rc1:=
 	!arm? ( !x86? ( >=media-libs/mesa-9.1:=[gles2] ) )
 	media-libs/opus:=
 	media-libs/speex:=
@@ -71,6 +72,7 @@ RDEPEND=">=app-accessibility/speech-dispatcher-0.8:=
 	sys-apps/pciutils:=
 	sys-libs/zlib:=[minizip]
 	virtual/udev
+	virtual/libusb:1=
 	x11-libs/gtk+:2=
 	x11-libs/libXinerama:=
 	x11-libs/libXScrnSaver:=
@@ -80,7 +82,7 @@ RDEPEND=">=app-accessibility/speech-dispatcher-0.8:=
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
 	!arm? (
-		>=dev-lang/nacl-toolchain-newlib-0_p11846
+		>=dev-lang/nacl-toolchain-newlib-0_p9093
 		dev-lang/yasm
 	)
 	dev-lang/perl
@@ -99,74 +101,6 @@ RDEPEND+="
 	!=www-client/chromium-9999
 	x11-misc/xdg-utils
 	virtual/ttf-fonts"
-
-gclient_config() {
-	einfo "gclient config -->"
-	# Allow the user to keep their config if they know what they are doing.
-	if ! grep -q KEEP .gclient; then
-		cp -f "${FILESDIR}/dot-gclient" .gclient || die
-	fi
-	cat .gclient || die
-}
-
-gclient_sync() {
-	einfo "gclient sync -->"
-	[[ -n "${ESVN_UMASK}" ]] && eumask_push "${ESVN_UMASK}"
-	# Only use a single job to prevent hangs.
-	"${WORKDIR}/depot_tools/gclient" sync --nohooks --jobs=1 \
-		--delete_unversioned_trees || die
-	[[ -n "${ESVN_UMASK}" ]] && eumask_pop
-}
-
-gclient_runhooks() {
-	# Run all hooks except gyp_chromium.
-	einfo "gclient runhooks -->"
-	cp src/DEPS src/DEPS.orig || die
-	sed -e 's:"python", "src/build/gyp_chromium":"true":' -i src/DEPS || die
-	"${WORKDIR}/depot_tools/gclient" runhooks
-	local ret=$?
-	mv src/DEPS.orig src/DEPS || die
-	[[ ${ret} -eq 0 ]] || die "gclient runhooks failed"
-}
-
-src_unpack() {
-	# First grab depot_tools.
-	DEPOT_TOOLS_REPO="https://src.chromium.org/svn/trunk/tools/depot_tools"
-	addwrite "${ESVN_STORE_DIR}"
-	if subversion_wc_info "${DEPOT_TOOLS_REPO}"; then
-		if [ "${ESVN_WC_URL}" != "${DEPOT_TOOLS_REPO}" ]; then
-			einfo "Removing old (http) depot_tools ${ESVN_WC_PATH}"
-			rm -rf "${ESVN_WC_PATH}" || die
-		fi
-	fi
-	ESVN_REVISION= subversion_fetch "${DEPOT_TOOLS_REPO}"
-	mv "${S}" "${WORKDIR}"/depot_tools || die
-
-	cd "${ESVN_STORE_DIR}/${PN}" || die
-
-	gclient_config
-	gclient_sync
-
-	# Disabled so that we do not download nacl toolchain.
-	#gclient_runhooks
-
-	# Remove any lingering nacl toolchain files.
-	rm -rf src/native_client/toolchain/linux_x86_newlib
-
-	subversion_wc_info
-
-	cd src || die
-	${PYTHON} build/util/lastchange.py -o build/util/LASTCHANGE || die
-	${PYTHON} build/util/lastchange.py -s third_party/WebKit \
-		-o build/util/LASTCHANGE.blink || die
-
-	mkdir -p "${S}" || die
-	einfo "Copying source to ${S}"
-	rsync -rlpgo --exclude=".svn/" . "${S}" || die
-
-	. chrome/VERSION
-	elog "Installing/updating to version ${MAJOR}.${MINOR}.${BUILD}.${PATCH} (Developer Build ${ESVN_WC_REVISION})"
-}
 
 if ! has chromium_pkg_die ${EBUILD_DEATH_HOOKS}; then
 	EBUILD_DEATH_HOOKS+=" chromium_pkg_die";
@@ -202,6 +136,7 @@ src_prepare() {
 		touch out/Release/gen/sdk/toolchain/linux_x86_newlib/stamp.untar || die
 	fi
 
+	epatch "${FILESDIR}/${PN}-gpsd-r0.patch"
 	epatch "${FILESDIR}/${PN}-system-ffmpeg-r7.patch"
 
 	epatch_user
@@ -224,7 +159,6 @@ src_prepare() {
 		\! -path 'third_party/libjingle/*' \
 		\! -path 'third_party/libphonenumber/*' \
 		\! -path 'third_party/libsrtp/*' \
-		\! -path 'third_party/libusb/*' \
 		\! -path 'third_party/libxml/chromium/*' \
 		\! -path 'third_party/libXNVCtrl/*' \
 		\! -path 'third_party/libyuv/*' \
@@ -255,10 +189,6 @@ src_prepare() {
 		\! -path 'third_party/x86inc/*' \
 		\! -path 'third_party/zlib/google/*' \
 		-delete || die
-
-	local v8_bundled="$(chromium_bundled_v8_version)"
-	local v8_installed="$(chromium_installed_v8_version)"
-	einfo "V8 version: bundled - ${v8_bundled}; installed - ${v8_installed}"
 
 	# Remove bundled v8.
 	find v8 -type f \! -iname '*.gyp*' -delete || die
@@ -292,7 +222,6 @@ src_configure() {
 	# Use system-provided libraries.
 	# TODO: use_system_hunspell (upstream changes needed).
 	# TODO: use_system_libsrtp (bug #459932).
-	# TODO: use_system_libusb (http://crbug.com/266149).
 	# TODO: use_system_ssl (http://crbug.com/58087).
 	# TODO: use_system_sqlite (http://crbug.com/22208).
 	myconf+="
@@ -304,6 +233,7 @@ src_configure() {
 		-Duse_system_libevent=1
 		-Duse_system_libjpeg=1
 		-Duse_system_libpng=1
+		-Duse_system_libusb=1
 		-Duse_system_libvpx=1
 		-Duse_system_libwebp=1
 		-Duse_system_libxml=1
@@ -369,10 +299,6 @@ src_configure() {
 	myconf+="
 		-Dusb_ids_path=/usr/share/misc/usb.ids"
 
-	# Save space by removing DLOG and DCHECK messages (about 6% reduction).
-	myconf+="
-		-Dlogging_like_official_build=1"
-
 	# Enable SUID sandbox.
 	myconf+="
 		-Dlinux_sandbox_path=${CHROMIUM_HOME}/chrome_sandbox
@@ -433,9 +359,6 @@ src_configure() {
 
 	# Make sure the build system will use the right tools, bug #340795.
 	tc-export AR CC CXX RANLIB
-
-	# Tools for building programs to be executed on the build system, bug #410883.
-	tc-export_build_env BUILD_AR BUILD_CC BUILD_CXX
 
 	# Tools for building programs to be executed on the build system, bug #410883.
 	export AR_host=$(tc-getBUILD_AR)
@@ -516,6 +439,7 @@ chromium_test() {
 		"ICUStringConversionsTest.*" # bug #350347
 		"MessagePumpLibeventTest.*" # bug #398591
 		"TimeTest.JsTime" # bug #459614
+		"SecurityTest.NewOverflow" # bug #465724
 	)
 	runtest out/Release/base_unittests "${excluded_base_unittests[@]}"
 
