@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-mobilephone/dfu-util/dfu-util-9999.ebuild,v 1.5 2013/08/22 02:23:03 creffett Exp $
+# $Header: /var/cvsroot/gentoo-x86/app-mobilephone/dfu-util/dfu-util-0.7.ebuild,v 1.1 2013/08/22 02:23:03 creffett Exp $
 
 EAPI=5
 
@@ -27,6 +27,7 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	if [[ ${PV} == "9999" ]] ; then
+		git-2_src_prepare
 		eautoreconf
 	fi
 	sed -i '/^bin_PROGRAMS/s:dfu-util_static[^ ]*::' src/Makefile.in
