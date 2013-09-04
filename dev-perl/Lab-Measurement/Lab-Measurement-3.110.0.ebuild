@@ -1,11 +1,11 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-perl/Lab-Measurement/Lab-Measurement-9999.ebuild,v 1.9 2013/09/04 17:57:15 dilfridge Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-perl/Lab-Measurement/Lab-Measurement-3.110.0.ebuild,v 1.1 2013/09/04 17:57:15 dilfridge Exp $
 
 EAPI=5
 
 if [[ "${PV}" != "9999" ]]; then
-	MODULE_VERSION=9999 # change this!!!
+	MODULE_VERSION=3.11
 	MODULE_AUTHOR="AKHUETTEL"
 	KEYWORDS="~amd64 ~x86"
 	inherit perl-module
@@ -25,9 +25,10 @@ HOMEPAGE="http://www.labmeasurement.de/"
 LICENSE="|| ( Artistic GPL-2 )"
 
 SLOT="0"
-IUSE="debug +xpression"
+IUSE=""
 
 RDEPEND="
+	dev-lang/perl
 	dev-perl/Clone
 	dev-perl/Exception-Class
 	dev-perl/TermReadKey
@@ -44,13 +45,6 @@ RDEPEND="
 	virtual/perl-Time-HiRes
 	!dev-perl/Lab-Instrument
 	!dev-perl/Lab-Tools
-	debug? (
-		dev-lang/perl[ithreads]
-		dev-perl/wxperl
-	)
-	xpression? (
-		dev-perl/wxperl
-	)
 "
 DEPEND="
 	${RDEPEND}
@@ -58,10 +52,8 @@ DEPEND="
 "
 
 pkg_postinst() {
-	if ( ! has_version sci-libs/linuxgpib ) && ( ! has_version dev-perl/Lab-VISA ) ; then
-		elog "You may want to install one or more backend driver modules. Supported are"
-		elog "    sci-libs/linuxgpib    Open-source GPIB hardware driver"
-		elog "    dev-perl/Lab-VISA     Bindings for the NI proprietary VISA driver"
-		elog "                          stack (dilfridge overlay)"
-	fi
+	elog "You may want to install one or more backend driver modules. Supported are"
+	elog "    sci-libs/linuxgpib    Open-source GPIB hardware driver"
+	elog "    dev-perl/Lab-VISA     Bindings for the NI proprietary VISA driver"
+	elog "                          stack (dilfridge overlay)"
 }
