@@ -1,21 +1,20 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-cluster/nova/nova-2013.1.9999.ebuild,v 1.5 2013/09/05 20:57:34 prometheanfire Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-cluster/nova/nova-2013.1.3-r2.ebuild,v 1.1 2013/09/05 20:57:34 prometheanfire Exp $
 
 EAPI=5
 PYTHON_COMPAT=( python2_7 )
 
-inherit distutils-r1 eutils git-2 multilib
+inherit distutils-r1 eutils multilib
 
 DESCRIPTION="Nova is a cloud computing fabric controller (main part of an
 IaaS system). It is written in Python."
 HOMEPAGE="https://launchpad.net/nova"
-EGIT_REPO_URI="https://github.com/openstack/nova.git"
-EGIT_BRANCH="stable/grizzly"
+SRC_URI="http://launchpad.net/${PN}/grizzly/${PV}/+download/${P}.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="+api +cert +compute +conductor +consoleauth +network +novncproxy +scheduler +spicehtml5proxy +xvpvncproxy"
 
 DEPEND="dev-python/setuptools[${PYTHON_USEDEP}]
@@ -56,6 +55,7 @@ RDEPEND=">=dev-python/amqplib-0.6.1[${PYTHON_USEDEP}]
 
 PATCHES=(
 )
+#	"${FILESDIR}/nova-grizzly-1-CVE-2013-2096.patch"
 
 pkg_setup() {
 	enewgroup nova
