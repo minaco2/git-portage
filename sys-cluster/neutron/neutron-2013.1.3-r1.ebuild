@@ -1,21 +1,22 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-cluster/neutron/neutron-9999.ebuild,v 1.3 2013/09/05 21:46:49 prometheanfire Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-cluster/neutron/neutron-2013.1.3-r1.ebuild,v 1.1 2013/09/05 21:46:49 prometheanfire Exp $
 
 EAPI=5
 PYTHON_COMPAT=( python2_7 )
 
-inherit distutils-r1 git-2
+inherit distutils-r1
 
 #restricted due to packages missing and bad depends in the test ==webob-1.0.8   
 RESTRICT="test"
 DESCRIPTION="Quantum is a virtual network service for Openstack."
 HOMEPAGE="https://launchpad.net/neutron"
-EGIT_REPO_URI="https://github.com/openstack/neutron.git"
+SRC_URI="http://launchpad.net/${PN}/grizzly/${PV}/+download/quantum-${PV}.tar.gz"
+S="${WORKDIR}/quantum-${PV}"
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="+dhcp +l3 +metadata +openvswitch +server test"
 
 #the cliff dep is as below because it depends on pyparsing, which only has 2.7 OR 3.2, not both
@@ -49,8 +50,8 @@ RDEPEND=">=dev-python/pastedeploy-1.5.0-r1[${PYTHON_USEDEP}]
 		~dev-python/pyparsing-1.5.7[${PYTHON_USEDEP}]
 		>=dev-python/python-keystoneclient-0.2.0[${PYTHON_USEDEP}]
 		dev-python/python-novaclient[${PYTHON_USEDEP}]
-		>=dev-python/python-neutronclient-2.3.0[${PYTHON_USEDEP}]
-		<=dev-python/python-neutronclient-3.0.0[${PYTHON_USEDEP}]
+		>=dev-python/python-quantumclient-2.2.0[${PYTHON_USEDEP}]
+		<=dev-python/python-quantumclient-3.0.0[${PYTHON_USEDEP}]
 		dev-python/pyudev[${PYTHON_USEDEP}]
 		>dev-python/sqlalchemy-0.7.8
 		<=dev-python/sqlalchemy-0.7.99
@@ -67,34 +68,34 @@ pkg_setup() {
 
 python_install() {
 	distutils-r1_python_install
-	newconfd "${FILESDIR}/neutron-confd" "neutron"
-	newinitd "${FILESDIR}/neutron-initd" "neutron"
+	newconfd "${FILESDIR}/neutron-confd" "quantum"
+	newinitd "${FILESDIR}/neutron-initd" "quantum"
 
-	use server && dosym /etc/init.d/neutron /etc/init.d/neutron-server
-	use dhcp && dosym /etc/init.d/neutron /etc/init.d/neutron-dhcp-agent
-	use l3 && dosym /etc/init.d/neutron /etc/init.d/neutron-l3-agent
-	use metadata && dosym /etc/init.d/neutron /etc/init.d/neutron-metadata-agent
-	use openvswitch && dosym /etc/init.d/neutron /etc/init.d/neutron-openvswitch-agent
+	use server && dosym /etc/init.d/quantum /etc/init.d/quantum-server
+	use dhcp && dosym /etc/init.d/quantum /etc/init.d/quantum-dhcp-agent
+	use l3 && dosym /etc/init.d/quantum /etc/init.d/quantum-l3-agent
+	use metadata && dosym /etc/init.d/quantum /etc/init.d/quantum-metadata-agent
+	use openvswitch && dosym /etc/init.d/quantum /etc/init.d/quantum-openvswitch-agent
 
 	dodir /var/log/neutron
 	fowners neutron:neutron /var/log/neutron
-	keepdir /etc/neutron
-	insinto /etc/neutron
+	keepdir /etc/quantum
+	insinto /etc/quantum
 
 	doins "etc/api-paste.ini"
 	doins "etc/dhcp_agent.ini"
 	doins "etc/l3_agent.ini"
 	doins "etc/policy.json"
-	doins "etc/neutron.conf"
+	doins "etc/quantum.conf"
 	doins "etc/rootwrap.conf"
 	insinto /etc
-	doins -r "etc/neutron/"
+	doins -r "etc/quantum/"
 
 	#remove the etc stuff from usr...
 	rm -R "${D}/usr/etc/"
 
-	insinto "/usr/lib64/python2.7/site-packages/neutron/db/migration/alembic_migrations/"
-	doins -r "neutron/db/migration/alembic_migrations/versions"
+	insinto "/usr/lib64/python2.7/site-packages/quantum/db/migration/alembic_migrations/"
+	doins -r "quantum/db/migration/alembic_migrations/versions"
 
 	#add sudoers definitions for user neutron
 	insinto /etc/sudoers.d/
