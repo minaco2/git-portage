@@ -1,23 +1,22 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-auth/keystone/keystone-2013.1.9999.ebuild,v 1.6 2013/09/15 02:58:58 prometheanfire Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-auth/keystone/keystone-2013.1.3-r3.ebuild,v 1.1 2013/09/15 02:58:58 prometheanfire Exp $
 
 EAPI=5
 #test restricted becaues of bad requirements given (old webob for instance)
 RESTRICT="test"
 PYTHON_COMPAT=( python2_7 )
 
-inherit git-2 distutils-r1
+inherit distutils-r1
 
 DESCRIPTION="Keystone is the Openstack authentication, authorization, and
 service catalog written in Python."
 HOMEPAGE="https://launchpad.net/keystone"
-EGIT_REPO_URI="https://github.com/openstack/keystone.git"
-EGIT_BRANCH="stable/grizzly"
+SRC_URI="http://launchpad.net/${PN}/grizzly/${PV}/+download/${P}.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="grizzly"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="+sqlite mysql postgres ldap"
 #IUSE="+sqlite mysql postgres ldap test"
 REQUIRED_USE="|| ( mysql postgres sqlite )"
@@ -70,10 +69,15 @@ RDEPEND="${DEPEND}
 #			>=dev-python/webob-1.0.8
 #			dev-python/webtest
 #			)
-
 PATCHES=(
 	"${FILESDIR}/2013.1.3-CVE-2013-4222.patch"
+	"${FILESDIR}/keystone-cve-2013-4294-grizzly.patch"
 )
+#	"${FILESDIR}/keystone-grizzly-2-CVE-2013-2157.patch"
+#
+#python_test() {
+#	"${PYTHON}" setup.py nosetests || die
+#}
 
 python_install() {
 	distutils-r1_python_install
