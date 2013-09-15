@@ -1,15 +1,13 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-apps/hwids/Attic/hwids-20130915.ebuild,v 1.1 2013/09/15 17:12:59 ssuominen Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-apps/hwids/hwids-20130915.1.ebuild,v 1.1 2013/09/15 18:08:30 flameeyes Exp $
 
 EAPI=5
 inherit udev eutils
 
 DESCRIPTION="Hardware (PCI, USB, OUI, IAB) IDs databases"
 HOMEPAGE="https://github.com/gentoo/hwids"
-# https://github.com/gentoo/hwids/pull/4 + make fetch =
-SRC_URI="http://dev.gentoo.org/~ssuominen/${P}.tar.gz"
-#SRC_URI="https://github.com/gentoo/hwids/archive/${P}.tar.gz"
+SRC_URI="https://github.com/gentoo/hwids/archive/${P}.tar.gz"
 
 LICENSE="|| ( GPL-2 BSD ) public-domain"
 SLOT="0"
@@ -18,7 +16,7 @@ IUSE="+udev"
 
 DEPEND="udev? (
 	dev-lang/perl
-	>=virtual/udev-206
+	>=virtual/udev-197-r1
 )"
 RDEPEND="!<sys-apps/pciutils-3.1.9-r2
 	!<sys-apps/usbutils-005-r1"
@@ -42,12 +40,5 @@ src_install() {
 }
 
 pkg_postinst() {
-	if use udev; then
-		udevadm hwdb --update --root="${ROOT%/}"
-		# http://cgit.freedesktop.org/systemd/systemd/commit/?id=1fab57c209035f7e66198343074e9cee06718bda
-		if [[ ${ROOT} != "" ]] && [[ ${ROOT} != "/" ]]; then
-			return 0
-		fi
-		udevadm control --reload
-	fi
+	use udev && udevadm hwdb --update --root="${ROOT%/}"
 }
