@@ -1,21 +1,22 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-libs/opencolorio/opencolorio-1.0.8.ebuild,v 1.8 2013/09/24 11:01:50 pinkbyte Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-libs/opencolorio/opencolorio-1.0.9.ebuild,v 1.1 2013/09/24 11:01:50 pinkbyte Exp $
 
 EAPI=5
 
+# Compatibility with Python 3 is declared by upstream, but it is broken in fact, check on bump
 PYTHON_COMPAT=( python2_7 )
 
 inherit cmake-utils python-single-r1 vcs-snapshot
 
 DESCRIPTION="A color management framework for visual effects and animation"
 HOMEPAGE="http://opencolorio.org/"
-SRC_URI="https://github.com/imageworks/OpenColorIO/tarball/v${PV} \
+SRC_URI="https://github.com/imageworks/OpenColorIO/archive/v${PV}.tar.gz \
 		-> ${P}.tar.gz"
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="~amd64 ~x86"
 IUSE="doc opengl pdf python sse2 test"
 
 RDEPEND="opengl? (
@@ -43,7 +44,7 @@ REQUIRED_USE="doc? ( python )"
 RESTRICT="test"
 
 PATCHES=(
-	"${FILESDIR}/${P}-documentation-gen.patch"
+	"${FILESDIR}/${PN}-1.0.8-documentation-gen.patch"
 	"${FILESDIR}/${P}-remove-external-doc-utilities.patch"
 )
 
