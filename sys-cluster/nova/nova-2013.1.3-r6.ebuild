@@ -1,21 +1,20 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-cluster/nova/nova-2013.1.9999.ebuild,v 1.8 2013/09/26 00:15:33 prometheanfire Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-cluster/nova/nova-2013.1.3-r6.ebuild,v 1.1 2013/09/26 00:15:33 prometheanfire Exp $
 
 EAPI=5
 PYTHON_COMPAT=( python2_7 )
 
-inherit distutils-r1 eutils git-2 multilib
+inherit distutils-r1 eutils multilib
 
 DESCRIPTION="Nova is a cloud computing fabric controller (main part of an
 IaaS system). It is written in Python."
 HOMEPAGE="https://launchpad.net/nova"
-EGIT_REPO_URI="https://github.com/openstack/nova.git"
-EGIT_BRANCH="stable/grizzly"
+SRC_URI="http://launchpad.net/${PN}/grizzly/${PV}/+download/${P}.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="+api +cert +compute +conductor +consoleauth +network +novncproxy +scheduler +spicehtml5proxy +xvpvncproxy sqlite mysql postgres"
 REQUIRED_USE="|| ( mysql postgres sqlite )"
 
@@ -61,6 +60,8 @@ RDEPEND=">=dev-python/amqplib-0.6.1[${PYTHON_USEDEP}]
 		virtual/python-argparse[${PYTHON_USEDEP}]"
 
 PATCHES=(
+	"${FILESDIR}/2013.1.3-CVE-2013-4261.patch"
+	"${FILESDIR}/2013.1.3-CVE-2013-4278.patch"
 )
 
 pkg_setup() {
