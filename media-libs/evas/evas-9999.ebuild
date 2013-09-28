@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-libs/evas/evas-1.7.9_pre1.ebuild,v 1.2 2013/09/28 09:26:37 vapier Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-libs/evas/evas-9999.ebuild,v 1.1 2013/09/28 09:26:37 vapier Exp $
 
 EAPI="5"
 
@@ -9,12 +9,11 @@ if [[ ${PV} == "9999" ]] ; then
 	EGIT_URI_APPEND=${PN}
 	EGIT_BRANCH=${PN}-1.7
 else
-	#SRC_URI="http://download.enlightenment.org/releases/${P}.tar.bz2"
-	SRC_URI="http://download.enlightenment.org/pre-releases/efl-${PV/_pre1}/${P/_pre1}.tar.bz2 -> ${P}.tar.bz2"
+	SRC_URI="http://download.enlightenment.org/releases/${P}.tar.bz2"
 	EKEY_STATE="snap"
 fi
 
-inherit autotools enlightenment
+inherit enlightenment
 
 DESCRIPTION="hardware-accelerated retained canvas API"
 HOMEPAGE="http://trac.enlightenment.org/e/wiki/Evas"
@@ -22,7 +21,7 @@ HOMEPAGE="http://trac.enlightenment.org/e/wiki/Evas"
 LICENSE="BSD-2"
 IUSE="altivec bidi +bmp directfb +eet fbcon +fontconfig gles gif +ico +jpeg mmx opengl +png +ppm +psd sse sse3 static-libs tga tiff wayland X xcb xpm"
 
-RDEPEND=">=dev-libs/eina-1.7.8
+RDEPEND=">=dev-libs/eina-${PV}
 	>=media-libs/freetype-2.3.9
 	fontconfig? ( media-libs/fontconfig )
 	gles? ( media-libs/mesa[gallium,gles2] )
@@ -44,16 +43,8 @@ RDEPEND=">=dev-libs/eina-1.7.8
 		xcb? (
 			x11-libs/xcb-util
 		) )
-	eet? ( >=dev-libs/eet-1.7.8 )"
+	eet? ( >=dev-libs/eet-${PV} )"
 DEPEND="${RDEPEND}"
-
-S=${WORKDIR}/${P/_pre1}
-
-src_prepare() {
-	sed -i "s:1.7.9:1.7.8:g" configure.ac
-	eautoreconf
-	enlightenment_src_prepare
-}
 
 src_configure() {
 	if use X ; then
