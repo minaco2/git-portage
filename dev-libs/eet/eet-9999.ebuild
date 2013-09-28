@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-libs/eet/eet-1.7.8.ebuild,v 1.2 2013/09/28 09:13:18 vapier Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-libs/eet/eet-9999.ebuild,v 1.6 2013/09/28 09:13:18 vapier Exp $
 
 EAPI="4"
 
