@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-util/buildbot/buildbot-9999.ebuild,v 1.2 2013/09/30 19:25:02 hwoarang Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-util/buildbot/buildbot-0.8.8-r2.ebuild,v 1.1 2013/09/30 19:25:02 hwoarang Exp $
 
 EAPI="5"
 PYTHON_DEPEND="2"
@@ -8,25 +8,19 @@ SUPPORT_PYTHON_ABIS="1"
 RESTRICT_PYTHON_ABIS="3.* *-jython"
 DISTUTILS_SRC_TEST="trial"
 DISTUTILS_DISABLE_TEST_DEPENDENCY="1"
-EGIT_REPO_URI="https://github.com/buildbot/${PN}.git"
 
-[[ ${PV} = 9999 ]] && inherit git-2
-inherit distutils readme.gentoo user systemd
+inherit distutils readme.gentoo systemd user
 
 MY_PV="${PV/_p/p}"
 MY_P="${PN}-${MY_PV}"
 
 DESCRIPTION="BuildBot build automation system"
 HOMEPAGE="http://trac.buildbot.net/ http://code.google.com/p/buildbot/ http://pypi.python.org/pypi/buildbot"
-[[ ${PV} = 9999 ]] || SRC_URI="mirror://pypi/${PN:0:1}/${PN}/${MY_P}.tar.gz"
+SRC_URI="mirror://pypi/${PN:0:1}/${PN}/${MY_P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-if [[ ${PV} == 9999 ]]; then
-	KEYWORDS=""
-else
-	KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-interix ~amd64-linux ~x86-linux ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris"
-fi
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-interix ~amd64-linux ~x86-linux ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris"
 IUSE="doc examples irc mail manhole test"
 
 # sqlite3 module of Python 2.5 is not supported.
@@ -66,7 +60,6 @@ pkg_setup() {
 }
 
 src_compile() {
-	[[ ${PV} = 9999 ]] && cd master/
 	distutils_src_compile
 
 	if use doc; then
@@ -78,7 +71,6 @@ src_compile() {
 }
 
 src_install() {
-	[[ ${PV} = 9999 ]] && cd master/
 	distutils_src_install
 
 	doman docs/buildbot.1
@@ -114,7 +106,6 @@ src_install() {
 }
 
 pkg_postinst() {
-	[[ ${PV} = 9999 ]] && cd master/
 	distutils_pkg_postinst
 	readme.gentoo_print_elog
 	elog
