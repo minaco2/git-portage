@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-servers/nginx/nginx-1.4.3.ebuild,v 1.2 2013/10/24 06:41:17 dev-zero Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-servers/nginx/nginx-1.5.6.ebuild,v 1.1 2013/10/24 06:41:17 dev-zero Exp $
 
 EAPI="5"
 
@@ -16,13 +16,6 @@ EAPI="5"
 
 # prevent perl-module from adding automagic perl DEPENDs
 GENTOO_DEPEND_ON_PERL="no"
-
-# syslog
-SYSLOG_MODULE_PV="165affd9741f0e30c4c8225da5e487d33832aca3"
-SYSLOG_MODULE_NGINX_PV="1.4.0"
-SYSLOG_MODULE_P="ngx_syslog-${SYSLOG_MODULE_PV}"
-SYSLOG_MODULE_URI="https://github.com/yaoweibin/nginx_syslog_patch/archive/${SYSLOG_MODULE_PV}.tar.gz"
-SYSLOG_MODULE_WD="${WORKDIR}/nginx_syslog_patch-${SYSLOG_MODULE_PV}"
 
 # devel_kit (https://github.com/simpl/ngx_devel_kit, BSD license)
 DEVEL_KIT_MODULE_PV="0.2.19"
@@ -41,12 +34,6 @@ HTTP_HEADERS_MORE_MODULE_PV="0.22"
 HTTP_HEADERS_MORE_MODULE_P="ngx_http_headers_more-${HTTP_HEADERS_MORE_MODULE_PV}-r1"
 HTTP_HEADERS_MORE_MODULE_URI="https://github.com/agentzh/headers-more-nginx-module/archive/v${HTTP_HEADERS_MORE_MODULE_PV}.tar.gz"
 HTTP_HEADERS_MORE_MODULE_WD="${WORKDIR}/headers-more-nginx-module-${HTTP_HEADERS_MORE_MODULE_PV}"
-
-# http_push (http://pushmodule.slact.net/, MIT license)
-HTTP_PUSH_MODULE_PV="0.692"
-HTTP_PUSH_MODULE_P="ngx_http_push-${HTTP_PUSH_MODULE_PV}"
-HTTP_PUSH_MODULE_URI="http://pushmodule.slact.net/downloads/nginx_http_push_module-${HTTP_PUSH_MODULE_PV}.tar.gz"
-HTTP_PUSH_MODULE_WD="${WORKDIR}/nginx_http_push_module-${HTTP_PUSH_MODULE_PV}"
 
 # http_cache_purge (http://labs.frickle.com/nginx_ngx_cache_purge/, BSD-2 license)
 HTTP_CACHE_PURGE_MODULE_PV="2.1"
@@ -132,11 +119,9 @@ inherit eutils ssl-cert toolchain-funcs perl-module flag-o-matic user systemd ve
 DESCRIPTION="Robust, small and high performance http and reverse proxy server"
 HOMEPAGE="http://nginx.org"
 SRC_URI="http://nginx.org/download/${P}.tar.gz
-	syslog? ( ${SYSLOG_MODULE_URI} -> ${SYSLOG_MODULE_P}.tar.gz )
 	${DEVEL_KIT_MODULE_URI} -> ${DEVEL_KIT_MODULE_P}.tar.gz
 	nginx_modules_http_upload_progress? ( ${HTTP_UPLOAD_PROGRESS_MODULE_URI} -> ${HTTP_UPLOAD_PROGRESS_MODULE_P}.tar.gz )
 	nginx_modules_http_headers_more? ( ${HTTP_HEADERS_MORE_MODULE_URI} -> ${HTTP_HEADERS_MORE_MODULE_P}.tar.gz )
-	nginx_modules_http_push? ( ${HTTP_PUSH_MODULE_URI} -> ${HTTP_PUSH_MODULE_P}.tar.gz )
 	nginx_modules_http_cache_purge? ( ${HTTP_CACHE_PURGE_MODULE_URI} -> ${HTTP_CACHE_PURGE_MODULE_P}.tar.gz )
 	nginx_modules_http_slowfs_cache? ( ${HTTP_SLOWFS_CACHE_MODULE_URI} -> ${HTTP_SLOWFS_CACHE_MODULE_P}.tar.gz )
 	nginx_modules_http_fancyindex? ( ${HTTP_FANCYINDEX_MODULE_URI} -> ${HTTP_FANCYINDEX_MODULE_P}.tar.gz )
@@ -161,13 +146,12 @@ KEYWORDS="~amd64 ~arm ~ppc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~x86-linux"
 NGINX_MODULES_STD="access auth_basic autoindex browser charset empty_gif fastcgi
 geo gzip limit_req limit_conn map memcached proxy referer rewrite scgi ssi
 split_clients upstream_ip_hash userid uwsgi"
-NGINX_MODULES_OPT="addition dav degradation flv geoip gunzip gzip_static image_filter
-mp4 perl random_index realip secure_link spdy stub_status sub xslt"
+NGINX_MODULES_OPT="addition auth_request dav degradation flv geoip gunzip gzip_static
+image_filter mp4 perl random_index realip secure_link spdy stub_status sub xslt"
 NGINX_MODULES_MAIL="imap pop3 smtp"
 NGINX_MODULES_3RD="
 	http_upload_progress
 	http_headers_more
-	http_push
 	http_cache_purge
 	http_slowfs_cache
 	http_fancyindex
@@ -182,7 +166,7 @@ NGINX_MODULES_3RD="
 	http_push_stream"
 
 IUSE="aio debug +http +http-cache ipv6 libatomic +pcre pcre-jit rtmp selinux ssl
-syslog userland_GNU vim-syntax"
+userland_GNU vim-syntax"
 
 for mod in $NGINX_MODULES_STD; do
 	IUSE="${IUSE} +nginx_modules_http_${mod}"
@@ -266,10 +250,6 @@ pkg_setup() {
 src_prepare() {
 	epatch "${FILESDIR}/${PN}-1.4.1-fix-perl-install-path.patch"
 
-	if use syslog; then
-		epatch "${SYSLOG_MODULE_WD}"/syslog_${SYSLOG_MODULE_NGINX_PV}.patch
-	fi
-
 	if use nginx_modules_http_upstream_check; then
 		epatch "${HTTP_UPSTREAM_CHECK_MODULE_WD}"/check_1.2.6+.patch
 	fi
@@ -307,11 +287,6 @@ src_configure() {
 	use pcre      && myconf+=" --with-pcre"
 	use pcre-jit  && myconf+=" --with-pcre-jit"
 
-	# syslog support
-	if use syslog; then
-		myconf+=" --add-module=${SYSLOG_MODULE_WD}"
-	fi
-
 	# HTTP modules
 	for mod in $NGINX_MODULES_STD; do
 		if use nginx_modules_http_${mod}; then
@@ -341,11 +316,6 @@ src_configure() {
 	if use nginx_modules_http_headers_more; then
 		http_enabled=1
 		myconf+=" --add-module=${HTTP_HEADERS_MORE_MODULE_WD}"
-	fi
-
-	if use nginx_modules_http_push; then
-		http_enabled=1
-		myconf+=" --add-module=${HTTP_PUSH_MODULE_WD}"
 	fi
 
 	if use nginx_modules_http_cache_purge; then
@@ -523,16 +493,6 @@ src_install() {
 		cd "${S}"/objs/src/http/modules/perl/
 		einstall DESTDIR="${D}" INSTALLDIRS=vendor
 		fixlocalpod
-	fi
-
-	if use syslog; then
-		docinto ${SYSLOG_MODULE_P}
-		dodoc "${SYSLOG_MODULE_WD}"/README
-	fi
-
-	if use nginx_modules_http_push; then
-		docinto ${HTTP_PUSH_MODULE_P}
-		dodoc "${HTTP_PUSH_MODULE_WD}"/{changelog.txt,protocol.txt,README}
 	fi
 
 	if use nginx_modules_http_cache_purge; then
