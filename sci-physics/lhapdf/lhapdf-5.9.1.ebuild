@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sci-physics/lhapdf/lhapdf-5.8.9.ebuild,v 1.2 2013/10/30 17:16:28 bicatali Exp $
+# $Header: /var/cvsroot/gentoo-x86/sci-physics/lhapdf/lhapdf-5.9.1.ebuild,v 1.1 2013/10/30 17:16:28 bicatali Exp $
 
 EAPI=5
 
@@ -66,6 +66,8 @@ src_test() {
 
 src_install() {
 	autotools-utils_src_install
+	use python \
+		&& python_fix_shebang "${ED}"/usr/bin/lhapdf-{getdata,query}
 	use doc && use cxx && dohtml -r ccwrap/doxy/html/*
 	if use examples; then
 		insinto /usr/share/doc/${PF}/examples
