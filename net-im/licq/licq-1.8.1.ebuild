@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-im/licq/licq-1.8.0-r2.ebuild,v 1.2 2013/11/04 11:42:28 polynomial-c Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-im/licq/licq-1.8.1.ebuild,v 1.1 2013/11/04 11:42:28 polynomial-c Exp $
 
 EAPI=5
 
@@ -9,8 +9,7 @@ inherit cmake-utils eutils flag-o-matic
 DESCRIPTION="ICQ Client with v8 support"
 HOMEPAGE="http://www.licq.org/"
 SRC_URI="mirror://sourceforge/${PN}/${P}.tar.bz2
-	https://github.com/${PN}-im/${PN}/commit/6b5f463697739be42948a052a03cc706f06c2150.patch -> ${P}-socks5.patch
-	https://github.com/${PN}-im/${PN}/commit/b05d42fda3da5d1b42bd89feb3b49516ce7d85b3.patch -> ${P}-doxygen.patch"
+	https://github.com/${PN}-im/${PN}/commit/f288367c758de16fc013c6f4c9851ca85813eb59.patch -> ${P}-qt4-gui_build_fix.patch"
 
 LICENSE="GPL-2"
 SLOT="2"
@@ -30,8 +29,9 @@ DEPEND="${RDEPEND}
 	dev-libs/boost"
 
 src_prepare() {
-	epatch "${DISTDIR}"/${P}-socks5.patch \
-		"${DISTDIR}"/${P}-doxygen.patch
+	pushd plugins &>/dev/null || die
+	epatch "${DISTDIR}"/${P}-qt4-gui_build_fix.patch
+	popd &>/dev/null || die
 
 	local licq_plugins="auto-reply icq rms"
 	use msn && licq_plugins+=" msn"
